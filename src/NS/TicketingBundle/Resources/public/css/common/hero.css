@@ -1,0 +1,10 @@
+.hero {
+   box-shadow: rgba(0, 0, 0, 0.2) 0 3px 4px -2px;
+   background: white;
+}
+.hero-body{
+  padding: 3rem 1rem;
+}
+.breadcrumb ul {
+  margin:0 -0.5em;
+}

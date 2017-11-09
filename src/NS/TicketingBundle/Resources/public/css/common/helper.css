@@ -1,0 +1,12 @@
+.is-fullwidth {
+  width:100%;
+}
+.is-size-7 {
+  font-size: .875rem!important;
+}
+.is-link-background {
+  background: #00caca
+}
+.has-mt-5 {
+  margin-top: 5px;
+}

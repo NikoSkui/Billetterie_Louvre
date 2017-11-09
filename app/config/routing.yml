@@ -1,0 +1,7 @@
+ns_checkout:
+    resource: "@NSCheckoutBundle/Resources/config/routing.yml"
+    prefix:   /checkout
+
+ns_ticketing:
+    resource: "@NSTicketingBundle/Resources/config/routing.yml"
+    prefix:   /

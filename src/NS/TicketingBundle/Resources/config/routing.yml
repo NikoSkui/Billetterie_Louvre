@@ -1,0 +1,3 @@
+ns_ticketing_homepage:
+    path:     /
+    defaults: { _controller: NSTicketingBundle:Default:index }

@@ -1,0 +1,65 @@
+.ticket .level {
+  align-items: stretch;
+}
+.ticket .content {
+  border-left: solid 1px #dbdbdb;
+  border-right: solid 1px #dbdbdb;  
+  margin-bottom: 0!important
+}
+.ticket .content .heading {
+  text-transform: capitalize;
+  margin-bottom: 1.5rem
+}
+.ticket .content.column  {
+  padding: .5rem;
+  width: 80%
+}
+.ticket .cursor.column  {
+  padding: .75rem;
+}
+.ticket .number-ticket {
+  display:flex;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding:0 2rem;
+  flex-grow: unset!important;
+}
+.ticket .cursor .more {
+  border-bottom: 1px solid #babec5;
+}
+.ticket .cursor .more, 
+.ticket .cursor .less {
+  font-size: 1.5rem;
+  padding:.4rem;
+}
+.ticket .cursor .more.is-active, 
+.ticket .cursor .less.is-active {
+  color: #276cda;
+}
+.ticket .cursor .more.is-disabled, 
+.ticket .cursor .less.is-disabled {
+  color: #babec5;
+}
+.ticket .cursor .more:hover.is-active, 
+.ticket .cursor .less:hover.is-active {
+  background-color: #ecf9f9;
+  cursor: pointer;
+}
+.ticket .cursor .more:hover.is-active {
+  border-top-right-radius: 5px;
+} 
+.ticket .cursor .less:hover.is-active {
+  border-bottom-right-radius: 5px;
+}
+div[id^=ticket-].is-disabled > * ,
+div[id^=ticket-].is-disabled #number-ticket,
+div[id^=ticket-].is-disabled #typeOfTicket, 
+div[id^=ticket-].is-disabled #price, 
+div[id^=ticket-].is-disabled .more 
+{
+  color: #babec5!important;
+}
+div[id^=ticket-].is-disabled.ticket .cursor .more:hover.is-active {
+  background-color: white;
+  cursor: auto;
+}

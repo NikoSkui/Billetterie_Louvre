@@ -1,0 +1,17 @@
+.navbar {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;
+  z-index:999;
+}
+.navbar.is-primary,
+.navbar.is-primary .navbar-brand>a.navbar-item:hover
+{
+  background-color: #02122d;
+}
+.navbar-item {
+  padding: 1rem 1rem;
+}
+.navbar .navbar-brand > .navbar-item {
+  box-sizing: content-box;
+   padding-left:0; 
+  height:48px;
+}

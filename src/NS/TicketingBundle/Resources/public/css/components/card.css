@@ -1,0 +1,35 @@
+.card {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.card-header,
+.card-image img {
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.card-header.is-primary {
+  background-color: #02122d;
+  color: #fff
+}
+.card-header-title {
+  display: flex;
+  align-items: flex-start;
+  font-size: 2rem;
+  font-weight: 500;
+}
+.card-header-title .cents {
+  font-size: .6125em;
+  padding-top:.3125rem;
+}
+.card-header-title .devise {
+  margin-left:5px;
+}
+.card-content { 
+  box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 1rem;
+}
+.card-content p { 
+  font-size: 14px
+}

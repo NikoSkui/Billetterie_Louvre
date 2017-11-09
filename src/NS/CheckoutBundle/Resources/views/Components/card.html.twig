@@ -1,0 +1,66 @@
+<div id="card-checkout" class="card">
+  <div class="card-image">
+    <figure class="image is-3by2">
+      {% image 'bundles/nscheckout/img/components/defaultCard.png' %}
+          <img src="{{ asset_url }}" alt="Joconde image" />
+      {% endimage %}
+    </figure>
+  </div>
+  <div class="card-content">
+    <div class="content">
+      <p><span class="title is-6">Musée du Louvre</span></p>
+      <div class="columns is-gapless is-marginless">
+        <div class="column is-two-thirds is-size-7">Date de la visite</div>
+        <div id="ticketDate" class="column is-size-7">
+          {% if summary is defined  %}
+            {{summary.selected_date|date('j M. Y')}}
+          {% else %}
+            -
+          {% endif %}
+        </div>
+      </div>
+      {% if summary is defined  %}
+        {% for ticket in summary.tickets %}
+          <div class="columns is-gapless is-marginless">
+            <div class="column is-two-thirds is-size-7">{{ ticket.nb }}x {{ ticket.name|capitalize }}</div>
+             <div id="price-subtotal" class="column is-size-7">€{{ ticket.priceTotal }},00</div> 
+          </div>
+        {% endfor %}
+      {% else %}
+        <div id="ticket-resume"></div>
+      {% endif %}
+
+
+      <div class="columns is-gapless is-marginless">
+        <div class="column is-two-thirds is-size-7">Sous-total</div>
+        <div id="price-subtotal" class="column is-size-7">
+          {% if summary is defined  %}
+            €{{summary.subtotal}},00
+          {% else %}
+            €0,00
+          {% endif %}
+        </div>
+      </div>
+      <hr>
+      <div class="columns is-gapless is-marginless">
+        <div class="column is-two-thirds is-size-5 title">Prix-total</div>
+        <div id="price-total" class="column is-size-5 title">
+          {% if summary is defined  %}
+            €{{summary.total}},00
+          {% else %}
+            €0,00
+          {% endif %}
+        </div>
+      </div>
+      <p class="has-mt-5">
+          <button class="button is-link is-fullwidth is-medium">
+            {% if step == 1 %}
+              <span>Passez à l'étape suivante</span>
+            {% endif %}
+            {% if step == 2 %}
+              <span>Confirmez votre réservation</span>
+            {% endif %}
+          </button>
+    </div>
+  </div>
+</div>

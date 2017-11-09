@@ -1,0 +1,9 @@
+.button.is-link
+{
+  background-color: #00caca;
+}
+.button.is-link.is-hovered, 
+.button.is-link:hover
+{
+  background-color: #00caca;
+}

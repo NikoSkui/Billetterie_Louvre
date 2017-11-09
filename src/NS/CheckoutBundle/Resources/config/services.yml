@@ -1,0 +1,4 @@
+services:
+#    ns_checkout.example:
+#        class: NS\CheckoutBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

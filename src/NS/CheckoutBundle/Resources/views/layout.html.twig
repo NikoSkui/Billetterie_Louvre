@@ -1,0 +1,104 @@
+{% extends "NSTicketingBundle::layout.html.twig" %}
+
+{% block stylesheets %}
+    {% stylesheets filter="scssphp,cssrewrite" output="css/app.css"
+      'bundles/nsticketing/css/common/*.css'  
+      'bundles/nsticketing/css/components/*.css'
+      'bundles/nscheckout/css/components/*.css'  
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+
+  {% include "NSCheckoutBundle:Components:breadcrumbs.html.twig" %}
+
+  <section class="hero is-paddingless">
+    <div class="hero-body" style="padding:1rem">
+      <div class="container">
+        {% include "NSCheckoutBundle:Components:step.html.twig" %}
+      </div>
+    </div>
+  </section>
+
+    {{ form_start(form) }}
+    <section class="section">
+      <div class="container">
+        <div class="tile is-ancestor" style="align-items:flex-start;">
+            <div class="tile is-7 is-vertical is-parent" data-container style="min-height:100vh;"s>
+              {% block bodyCheckoutLeft %}{% endblock %}
+            </div>
+            <div class="tile is-parent" data-wrapper>
+              <div class="tile is-child" data-sticky>
+                {% include "NSCheckoutBundle:Components:card.html.twig" %}        
+              </div>
+            </div>
+        </div>
+      </div>
+    </section>
+    {{ form_end(form) }}
+
+  <footer class="footer">
+
+
+    <div class="container">
+      <div class="columns is-gapless is-centered">
+
+        <div class="column is-1">
+          <figure class="image is-16by9">
+            {% image 'bundles/nsticketing/img/payment-methods/cartebancaire@2x.png'%}
+              <img src="{{ asset_url }}" alt="carte bancaire méthode de paiement" />
+            {% endimage %}
+          </figure>
+        </div>
+        <div class="column is-1">
+          <figure class="image is-16by9">
+            {% image 'bundles/nsticketing/img/payment-methods/visa@2x.png'%}
+              <img src="{{ asset_url }}" alt="banque contact méthode de paiement" />
+            {% endimage %} 
+          </figure>
+        </div>
+        <div class="column is-1">
+          <figure class="image is-16by9">
+            {% image 'bundles/nsticketing/img/payment-methods/mc@2x.png'%}
+              <img src="{{ asset_url }}" alt="banque contact méthode de paiement" />
+            {% endimage %} 
+          </figure>
+        </div>
+        <div class="column is-1">
+          <figure class="image is-16by9">
+            {% image 'bundles/nsticketing/img/payment-methods/ideal@2x.png'%}
+              <img src="{{ asset_url }}" alt="banque contact méthode de paiement" />
+            {% endimage %} 
+          </figure>
+        </div>
+        <div class="column is-1">
+          <figure class="image is-16by9">
+            {% image 'bundles/nsticketing/img/payment-methods/maestro@2x.png'%}
+              <img src="{{ asset_url }}" alt="banque contact méthode de paiement" />
+            {% endimage %} 
+          </figure>
+        </div>
+        <div class="column is-1">
+          <figure class="image is-16by9">
+            {% image 'bundles/nsticketing/img/payment-methods/bcmc@2x.png'%}
+              <img src="{{ asset_url }}" alt="banque contact méthode de paiement" />
+            {% endimage %} 
+          </figure>
+        </div>
+
+      </div>
+    </div>
+
+  </footer>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  {% javascripts 
+    'bundles/nscheckout/js/common/main.js'  
+    'bundles/nscheckout/js/components/*.js'  
+  %}
+      <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+
+{% endblock %}

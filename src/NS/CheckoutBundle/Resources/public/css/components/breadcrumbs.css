@@ -1,0 +1,8 @@
+.breadcrumbs {
+  margin:0;
+  padding-top: 1rem;
+  background: white;
+}
+.breadcrumbs ul > li a .icon {
+  width:1rem;
+}

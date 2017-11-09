@@ -1,0 +1,78 @@
+.card-to-ticket .image > img {
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 5px;
+  box-shadow: -1px 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+}
+.card-to-ticket .card-content {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.card-to-ticket .columns.columns-gap {
+  margin-left: calc(-1 * 0.75rem);
+  margin-right: calc(-1 * 0.75rem);
+}
+
+.card-to-ticket .columns.columns-gap .column {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.card-to-ticket input{
+  border: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #babec5;
+  box-shadow: none;
+}
+.card-to-ticket input:focus{
+  border-bottom: 2px solid #3273dc;
+  border-color: #3273dc;
+  box-shadow: none
+}
+
+.card-to-ticket .select-birthday {
+  width:100%;
+}
+.card-to-ticket .birthday {
+  display: flex;
+}
+.card-to-ticket .birthday > select {
+  flex-grow: 2
+}
+.card-to-ticket .birthday > select:nth-of-type(1) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-right-width: 0px;
+}
+.card-to-ticket .birthday > select:nth-of-type(2) {
+  border-radius: 0px;
+}
+.card-to-ticket .birthday > select:nth-of-type(3) {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-left-width: 0px;
+}
+.select-birthday:not(.is-multiple)::before,
+.select-birthday:not(.is-multiple) .birthday::before
+{
+  border: 1px solid #3273dc;
+  border-right: 0;
+  border-top: 0;
+  content: " ";
+  display: block;
+  height: .5em;
+  pointer-events: none;
+  position: absolute;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  width: .5em;
+  margin-top: -.375em;
+  right: 1.125em;
+  top: 50%;
+  z-index: 4;
+}
+.select:not(.is-multiple)::before{
+  left:22%;
+}
+.select:not(.is-multiple) .birthday::before{
+  left:52%;
+}

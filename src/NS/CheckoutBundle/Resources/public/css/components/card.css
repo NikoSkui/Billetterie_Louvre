@@ -1,0 +1,29 @@
+.booking-static { 
+  position: static;
+}
+
+.booking-fixed {
+  background-color: #fff;
+  position: fixed;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  top:12px;
+  bottom:auto;
+}
+
+.booking-absolute {
+  position: absolute;
+  box-sizing: border-box;
+  top:auto;
+  bottom:12px;
+  background-color: #fff;
+}
+#card-checkout .card-content .column{
+  line-height: 1.7
+}
+#card-checkout hr {
+  margin-bottom: .5rem
+}
+#card-checkout .columns .column:last-child {
+  text-align: right;
+}

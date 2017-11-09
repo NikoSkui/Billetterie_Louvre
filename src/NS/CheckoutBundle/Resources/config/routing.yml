@@ -1,0 +1,11 @@
+ns_checkout_homepage:
+    path:     /
+    defaults: { _controller: NSCheckoutBundle:Default:index }
+
+ns_checkout_particulars:
+    path:     /particulars
+    defaults: { _controller: NSCheckoutBundle:Default:particulars }
+
+ns_checkout_payment:
+    path:     /payment
+    defaults: { _controller: NSCheckoutBundle:Default:payment }

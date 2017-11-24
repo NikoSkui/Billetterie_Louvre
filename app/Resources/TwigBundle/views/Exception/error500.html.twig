@@ -1,0 +1,12 @@
+{% extends "NSTicketingBundle::layout.html.twig" %}
+
+{% block title %}Une erreur s'est produite : {{ status_text|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block headerTitle %}Oops! Une erreur s'est produite{% endblock %}
+
+{% block body %}
+  Le serveur a renvoyé un "{{ status_code }} {{ status_text|trans }}".
+  <hr>
+  {{- exception.message|nl2br|format_file_from_text -}}
+{% endblock %}

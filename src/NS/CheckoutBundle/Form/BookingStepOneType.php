@@ -8,8 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 //use pour les chams de formulaire
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
-class BookingType extends AbstractType
+class BookingStepOneType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -18,18 +20,13 @@ class BookingType extends AbstractType
     {
         $builder
             ->add('date', HiddenType::class)
-            ->add('userMail')
-            ->add('isHalf')
-            ->add('ticket-normal', HiddenType::class,[
-                'mapped' => false
-            ])
-            ->add('ticket-senior', HiddenType::class,[
-                'mapped' => false
-            ])
-            ->add('ticket-enfant', HiddenType::class,[
-                'mapped' => false
+            ->add('spaces', HiddenType::class)
+            ->add('isHalf', ChoiceType::class,[
+                'choices' => [
+                    'Visite pour la journée' => false,
+                    'Visite pour la demi-journée' => true
+                ]
             ]);
-
     }
     
     /**
@@ -47,7 +44,7 @@ class BookingType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'ns_checkoutbundle_booking';
+        return 'booking_stepOne';
     }
 
 

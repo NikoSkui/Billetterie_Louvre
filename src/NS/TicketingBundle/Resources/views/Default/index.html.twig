@@ -55,14 +55,16 @@
                 <h4 class="title is-6">Horaires d'ouverture</h4>
               </div>
               <div class="column">
-                <p>Lundi, jeudi, samedi, dimanche : 9h00 - 18h00. Mercredi, vendredi : 9h00 - 21h45. Fermé le mardi et jours fériés</p>
+                <p>Lundi, jeudi, samedi, dimanche : 9h00 - 18h00.</p>
+                <p>Mercredi, vendredi : 9h00 - 21h45.</p>
+                <p>Fermé le mardi et jours fériés.</p>
               </div>
             </div>
             
           </div>
         </div>
         <div class="column" style="position:relative;top:-78px;">
-          <div class="card">
+          <div class="card homepage">
             <header class="card-header is-primary">
               <p class="card-header-title has-text-white">
               <span class="decimal">16</span>
@@ -72,13 +74,21 @@
             </header>
             <div class="card-content">
               <div class="content">
-                <p><span class="title is-6">Information importante</span></p>
-                <p>Si des personnes de votre groupe ont un accès gratuit pour le Louvre, ils peuvent entrer avec vous par l'Entrée Prioritaire.</p>
+                <p><span class="title is-6">Sélectionnez une date</span></p>
+
+                 <div id="datepicker" 
+                     style="margin-bottom:16px;
+                            box-shadow: 0 0 1px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);">
+                </div> 
+                
                 <a href="{{ path('ns_checkout_homepage') }}" 
                    class="button is-link is-fullwidth is-medium"
                 >
                   <span>Réserver maintenant</span>
                 </a>
+
+                <p><span class="title is-6">Information importante</span></p>
+                <p>Si des personnes de votre groupe ont un accès gratuit pour le Louvre, ils peuvent entrer avec vous par l'Entrée Prioritaire.</p>
               </div>
             </div>
 
@@ -87,4 +97,14 @@
       </div>
     </div>
   </section>
+{% endblock %}
+
+
+{% block javascript %}
+  {% javascripts 
+    'bundles/nscheckout/js/common/main.js'  
+    'bundles/nscheckout/js/components/calendar.js'  
+  %}
+      <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
 {% endblock %}

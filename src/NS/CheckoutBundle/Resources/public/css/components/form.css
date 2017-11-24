@@ -1,3 +1,16 @@
 select#country option[value="Fr"] { 
   background-image:url('../../img/components/form/france.png');
 }
+.select select {
+
+  border: 0px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-color: #dbdbdb;
+  border-radius:0;
+}
+.select select:focus,
+.select select:active
+{
+  box-shadow:none;
+  border-bottom: 2px solid transparent;
+}

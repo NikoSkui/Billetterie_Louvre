@@ -1,11 +1,19 @@
 ns_checkout_homepage:
     path:     /
-    defaults: { _controller: NSCheckoutBundle:Default:index }
+    defaults: 
+        _controller: NSCheckoutBundle:Default:index
 
-ns_checkout_particulars:
-    path:     /particulars
-    defaults: { _controller: NSCheckoutBundle:Default:particulars }
+ns_checkout_exit:
+    path:     /exit
+    defaults: 
+        _controller: NSCheckoutBundle:Default:exit
 
-ns_checkout_payment:
-    path:     /payment
-    defaults: { _controller: NSCheckoutBundle:Default:payment }
+ns_checkout_ajax_remaining:
+    path:     /remaining/{daystart}/{dayend}/{month}/{year}
+    defaults: 
+        _controller: NSCheckoutBundle:Ajax:remaining
+    requirements:
+        daystart: \d{1,2}
+        dayend: \d{1,2}
+        month:   \d{1,2}
+        year:  \d{4}

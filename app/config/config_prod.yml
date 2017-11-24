@@ -20,3 +20,7 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
+
+ns_checkout:
+    booking:
+        max_tickets_by_day: 1000

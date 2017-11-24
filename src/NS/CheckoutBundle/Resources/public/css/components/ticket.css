@@ -7,8 +7,8 @@
   margin-bottom: 0!important
 }
 .ticket .content .heading {
-  text-transform: capitalize;
-  margin-bottom: 1.5rem
+  text-transform: none;
+  margin-bottom: .9rem;
 }
 .ticket .content.column  {
   padding: .5rem;

@@ -1,4 +1,53 @@
 services:
-#    ns_checkout.example:
+#    ns_checkout.services.example:
 #        class: NS\CheckoutBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+#   ns_checkout.services.config_checkout:
+#       class: NS\CheckoutBundle\Services\ConfigCheckoutService
+#       arguments: []
+
+    ns_checkout.services.up_booking:
+        class: NS\CheckoutBundle\Services\UpBookingService
+        arguments: 
+            - '@doctrine.orm.entity_manager'
+
+    ns_checkout.services.booking_mailer:
+        class: NS\CheckoutBundle\Services\BookingMailerService
+        arguments:
+            - "@mailer"
+            - "@templating"
+            
+    ns_checkout.services.stripe:
+        class: NS\CheckoutBundle\Services\StripeService
+        arguments:
+            - "%stripe_secret_key%"
+
+    ns_checkout.services.live_time:
+        class: NS\CheckoutBundle\Services\LiveTimeService
+        arguments:
+            - "@request_stack"
+            - "@router"
+            - "@doctrine.orm.entity_manager"
+
+    # Services pour validation form
+
+    ns_checkout.validator.constraints.max_capacity_reached:
+        class: NS\CheckoutBundle\Validator\Constraints\MaxCapacityReachedValidator
+        arguments:
+            - "@request_stack"
+            - "%ns_checkout.booking.max_tickets_by_day%"
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: validator.constraint_validator, alias: ns_checkout_max_capacity_reached }  
+            # C'est avec l'alias qu'on retrouvera le service
+
+    ns_checkout.validator.constraints.child_with_parent:
+        class: NS\CheckoutBundle\Validator\Constraints\ChildWithParentValidator
+        arguments:
+            - "@request_stack"
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: validator.constraint_validator, alias: ns_checkout_child_with_parent }  
+            # C'est avec l'alias qu'on retrouvera le service
+            

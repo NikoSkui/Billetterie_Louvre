@@ -38,9 +38,30 @@ class Ticket
     /**
      * @var string
      *
+     * @ORM\Column(name="min", type="integer", nullable=true)
+     */
+    private $min;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="max", type="integer", nullable=true)
+     */
+    private $max;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="price", type="decimal", precision=6, scale=2)
      */
     private $price;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", length=255)
+     */
+    private $image;
 
     /**
     * Bidirectionnal - One Ticket has many BookingTicket. (INVERSE SIDE)
@@ -143,11 +164,11 @@ class Ticket
     /**
      * Add booking
      *
-     * @param \NS\Checkout\Entity\BookingTicket $booking
+     * @param \NS\CheckoutBundle\Entity\BookingTicket $booking
      *
      * @return Ticket
      */
-    public function addBooking(\NS\Checkout\Entity\BookingTicket $booking)
+    public function addBooking(\NS\CheckoutBundle\Entity\BookingTicket $booking)
     {
         $this->bookings[] = $booking;
 
@@ -157,9 +178,9 @@ class Ticket
     /**
      * Remove booking
      *
-     * @param \NS\Checkout\Entity\BookingTicket $booking
+     * @param \NS\CheckoutBundle\Entity\BookingTicket $booking
      */
-    public function removeBooking(\NS\Checkout\Entity\BookingTicket $booking)
+    public function removeBooking(\NS\CheckoutBundle\Entity\BookingTicket $booking)
     {
         $this->bookings->removeElement($booking);
     }
@@ -172,5 +193,77 @@ class Ticket
     public function getBookings()
     {
         return $this->bookings;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     *
+     * @return Ticket
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set min
+     *
+     * @param integer $min
+     *
+     * @return Ticket
+     */
+    public function setMin($min)
+    {
+        $this->min = $min;
+
+        return $this;
+    }
+
+    /**
+     * Get min
+     *
+     * @return integer
+     */
+    public function getMin()
+    {
+        return $this->min;
+    }
+
+    /**
+     * Set max
+     *
+     * @param integer $max
+     *
+     * @return Ticket
+     */
+    public function setMax($max)
+    {
+        $this->max = $max;
+
+        return $this;
+    }
+
+    /**
+     * Get max
+     *
+     * @return integer
+     */
+    public function getMax()
+    {
+        return $this->max;
     }
 }

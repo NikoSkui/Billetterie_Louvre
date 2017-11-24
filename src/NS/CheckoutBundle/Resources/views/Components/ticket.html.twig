@@ -1,28 +1,33 @@
-<div id="ticket-{{ ticket.name|lower }}" class="box is-paddingless ticket is-disabled is-hidden">
-<div class="columns level is-marginless">
+<div id="ticket-{{ ticket.name|lower }}" 
+     class="box is-paddingless ticket is-disabled is-hidden"
+     data-ticket
+     data-name="{{ ticket.name|lower }}"
+     data-price="{{ ticket.price }}"
+>
+  <div class="columns level is-marginless">
 
-  <div class="column level-item is-1 number-ticket"> 
-    <div id="number-ticket" class=" has-text-centered title is-3">0</div>
-  </div>
-  <div class="column is-9 content"> 
-    <div id="typeOfTicket" class="title is-6 is-marginless">{{ ticket.name|capitalize }}</div>
-    <div class="heading">{{ ticket.description }}</div>
-    <div id="price" class="title is-6" data-price="{{ ticket.price }}">x €{{ ticket.price }}</div>
-  </div>
-  <div class="column cursor "> 
-    <div class="tile is-ancestor is-vertical ">
-      <div class="tile is-parent more is-active">
-        <div class="tile is-child">
-          <div class="has-text-centered ">+</div>
+    <div class="column level-item is-1 number-ticket"> 
+      <div id="number-ticket" class=" has-text-centered title is-3">0</div>
+    </div>
+    <div class="column is-9 content"> 
+      <div id="typeOfTicket" class="title is-6 is-marginless">{{ ticket.name[:1]|upper ~ ticket.name[1:] }}</div>
+      <div class="heading">{{ ticket.description }}</div>
+      <div id="isHalf" class="title is-6">À la journée</div>
+    </div>
+    <div class="column cursor "> 
+      <div class="tile is-ancestor is-vertical ">
+        <div class="tile is-parent more is-active">
+          <div class="tile is-child">
+            <div class="has-text-centered ">+</div>
+          </div>
         </div>
-      </div>
-      <div class="tile is-parent less is-disabled"> 
-        <div class="tile is-child">
-          <div class="has-text-centered">-</div>
+        <div class="tile is-parent less is-disabled"> 
+          <div class="tile is-child">
+            <div class="has-text-centered">-</div>
+          </div>
         </div>
       </div>
     </div>
+    
   </div>
-</div>
-
 </div>

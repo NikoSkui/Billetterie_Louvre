@@ -1,0 +1,52 @@
+{% extends "NSCheckoutBundle::layout.html.twig" %}
+
+
+{% block bodyCheckoutLeft %}
+
+  <h2 class="subtitle">Vos coordonnées bancaires</h2>
+
+  <div id="field-userMail" class="tile is-child" style="flex-grow:0;">
+    <div class="field ">
+      <label class="email">Adresse mail</label>
+      <div class="control">
+        
+        {% if form_errors(form.userMail) %} 
+          {{ form_widget(form.userMail, {'attr': {'class': 'input is-medium is-danger'}}) }}
+        {% else %}
+          {{ form_widget(form.userMail, {'attr': {'class': 'input is-medium'}}) }}
+        {% endif %}
+      </div>
+      <p class="help">Nous vous enverrons vos billets à cette adresse mail.</p>
+      <div class="help is-danger">{{ form_errors(form.userMail) }}</div>
+    </div>
+  </div>
+
+  <div id="field-userMail" class="tile is-child" style="flex-grow:0;">
+    <div class="field ">
+      <label class="email">Nom inscrit sur la carte</label>
+      <div class="control">
+        {% if form_errors(form.userMail) %} 
+          {{ form_widget(form.userName, {'attr': {'class': 'input is-medium is-danger'}}) }}
+        {% else %}
+          {{ form_widget(form.userName, {'attr': {'class': 'input is-medium'}}) }}
+        {% endif %}
+      </div>
+      <div class="help is-danger">{{ form_errors(form.userName) }}</div>
+      {# <p class="help">Nous vous enverrons vos billets à cette adresse mail.</p> #}
+    </div>
+  </div>
+
+  <div id="field-card" class="tile is-child" >
+    <div class="field">
+      <label class="card-element">Numéro de carte</label>
+      <!-- a Stripe Element will be inserted here. -->
+      <div id="card-element" style="height: 45px;"></div>
+      <!-- Used to display form errors -->
+      <p id="card-errors" role="alert" class="help"></p>
+    </div>
+  </div>
+
+ <script src="https://js.stripe.com/v3/"></script>
+
+
+{% endblock %}

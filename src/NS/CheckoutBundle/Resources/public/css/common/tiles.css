@@ -1,0 +1,6 @@
+.tile.step-for{
+  flex-grow:0;
+}
+.tile.step-for .tile.is-parent {
+  align-items: center;
+}

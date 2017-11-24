@@ -4,11 +4,15 @@ namespace NS\CheckoutBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+// Use pour la validation de formulaire
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * BookingTicket
  *
  * @ORM\Table(name="ns_booking_ticket")
  * @ORM\Entity(repositoryClass="NS\CheckoutBundle\Repository\BookingTicketRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class BookingTicket
 {
@@ -21,7 +25,48 @@ class BookingTicket
      */
     private $id;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="user_name", type="string", length=255)
+     * @Assert\NotBlank(message="Vous devez saisir un nom et prénom")
+     * @Assert\Type(
+     *      type="string",
+     *      message="Vous devez saisir une chaine de charactère"
+     * )
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 200,
+     *      minMessage ="Vous devez entrer au moins {{ limit }} charactères",
+     *      minMessage ="Vous devez entrer moins de {{ limit }} charactères"
+     * )
+     */
+    private $userName;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="country", type="string", length=255)
+     * @Assert\NotBlank(message="Vous devez choisir un pays")
+     */
+    private $country;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="birthday", type="date")
+     * @Assert\NotBlank(message="Vous devez choisir une date d'anniversaire")
+     * @Assert\Date(message="Le format n'est pas valide")
+     */
+    private $birthday;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_reduce", type="boolean")
+     * @Assert\Type(type="bool")
+     */
+    private $isReduce;
 
     /**
      * @var string
@@ -33,30 +78,9 @@ class BookingTicket
     /**
      * @var string
      *
-     * @ORM\Column(name="last_name", type="string", length=255)
+     * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
      */
     private $lastName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="country", type="string", length=255)
-     */
-    private $country;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="birthday", type="date")
-     */
-    private $birthday;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_reduce", type="boolean")
-     */
-    private $isReduce;
 
     /**
      * @var string
@@ -81,6 +105,23 @@ class BookingTicket
      */
     private $ticket;
 
+
+    // /**
+    // * @ORM\PrePersist
+    // */
+    // public function increase()
+    // {
+    //     $this->getBooking()->increaseSpaces();
+    // }
+
+    // /**
+    // * @ORM\PreRemove
+    // */
+    // public function decrease()
+    // {
+    //     $this->getBooking()->decreaseSpaces();
+    // }
+
     /**
      * Get id
      *
@@ -89,6 +130,39 @@ class BookingTicket
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set userName
+     *
+     * @param string $userName
+     *
+     * @return BookingTicket
+     */
+    public function setUserName($userName)
+    {
+        $this->userName = $userName;
+
+        $partOfName = explode(' ',$userName,2);
+        
+        $this->setFirstName($partOfName[0]);
+        if (isset($partOfName[1])) {
+            $this->setLastName($partOfName[1]);
+        } else {
+            $this->setLastName('');            
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get userName
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
     }
 
     /**
@@ -238,11 +312,11 @@ class BookingTicket
     /**
      * Set booking
      *
-     * @param \OC\PlatformBundle\Entity\Booking $booking
+     * @param \NS\CheckoutBundle\Entity\Booking $booking
      *
      * @return BookingTicket
      */
-    public function setBooking(\OC\PlatformBundle\Entity\Booking $booking)
+    public function setBooking(\NS\CheckoutBundle\Entity\Booking $booking)
     {
         $this->booking = $booking;
 
@@ -252,7 +326,7 @@ class BookingTicket
     /**
      * Get booking
      *
-     * @return \OC\PlatformBundle\Entity\Booking
+     * @return \NS\CheckoutBundle\Entity\Booking
      */
     public function getBooking()
     {
@@ -262,11 +336,11 @@ class BookingTicket
     /**
      * Set ticket
      *
-     * @param \OC\PlatformBundle\Entity\Ticket $ticket
+     * @param \NS\CheckoutBundle\Entity\Ticket $ticket
      *
      * @return BookingTicket
      */
-    public function setTicket(\OC\PlatformBundle\Entity\Ticket $ticket)
+    public function setTicket(\NS\CheckoutBundle\Entity\Ticket $ticket)
     {
         $this->ticket = $ticket;
 
@@ -276,7 +350,7 @@ class BookingTicket
     /**
      * Get ticket
      *
-     * @return \OC\PlatformBundle\Entity\Ticket
+     * @return \NS\CheckoutBundle\Entity\Ticket
      */
     public function getTicket()
     {

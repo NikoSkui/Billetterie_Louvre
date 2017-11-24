@@ -10,4 +10,16 @@ namespace NS\CheckoutBundle\Repository;
  */
 class BookingRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findNbTicketsForDate ($date) { 
+
+    return $this
+            ->createQueryBuilder('b')
+            ->leftJoin('b.tickets', 'bt')
+            ->select('count(bt) as cnt')
+            ->where('b.date = :date')
+            ->andwhere('b.status >= 0')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->getQuery()
+            ->getSingleScalarResult();
+  }
 }

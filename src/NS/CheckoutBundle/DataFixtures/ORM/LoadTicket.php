@@ -21,15 +21,38 @@ class LoadTicket
       [
         'name'        => 'normal',
         'description' => 'Age : + 12ans',
-        'price'       => '12,00'],
+        'min'         => '12',
+        'max'         => '60',
+        'price'       => '16,00',
+        'image'       => 'delacroix.jpg'],
       [
-        'name' => 'senior',
+        'name'        => 'senior',
         'description' => 'Age: + 60ans',
-        'price' => '12,00'],
+        'min'         => '60',
+        'max'         => '150',
+        'price'       => '12,00',
+        'image'       => 'laitiere.jpg'],
       [
-        'name' => 'enfant',
+        'name'        => 'enfant',
         'description' => 'Age: 4 - 12ans',
-        'price' => '8,00']
+        'min'         => '4',
+        'max'         => '12',
+        'price'       => '8,00',
+        'image'       => 'la-vierge-et-l-enfant.jpg'],
+      [
+        'name'        => 'bébé',
+        'description' => 'Age: - 4ans',
+        'min'         => '0',
+        'max'         => '4',
+        'price'       => '0,00',
+        'image'       => ''],
+      [
+        'name'        => 'réduit',
+        'description' => 'Présenter justificatif',
+        'min'         => '',
+        'max'         => '',
+        'price'       => '10,00',
+        'image'       => ''],
     ];
 
     foreach ($datas as $data) {
@@ -37,7 +60,10 @@ class LoadTicket
       $ticket = new Ticket();
       $ticket->setName($data['name']);
       $ticket->setDescription($data['description']);
+      $ticket->setMin($data['min']);
+      $ticket->setMax($data['max']);
       $ticket->setPrice($data['price']);
+      $ticket->setImage($data['image']);
       
       // On la persiste
       $manager->persist($ticket);

@@ -1,0 +1,39 @@
+{% extends "NSCheckoutBundle::layout.html.twig" %}
+
+
+{% block bodyCheckoutLeft %}
+
+  <div class="tile is-child section step-for" >
+    <h1 class="title has-text-centered">Félicitations !</h1> 
+    <p class="sutitle has-text-centered">Votre réservation à bien été effectuée</p> 
+  </div>
+
+  <div class="tile is-child box notification is-primary step-for">
+    <h2 class="subtitle"><strong>Informations importantes</strong></h2>
+    <div class="tile is-ancestor is-vertical">
+    <p class="tile is-parent">
+      <span class="tile is-child is-size-5">Référence de dossier : </span>
+      <span class="tile is-child is-size-7">{{booking.reference}} </span>
+    </p>
+    <p class="tile is-parent">
+      <span class="tile is-child is-size-5">Date de la visite : </span>
+      <span class="tile is-child is-size-7">{{booking.date|date('d M. Y')}} </span>
+    </p>
+    <p class="tile is-parent">
+      <span class="tile is-child is-size-5">Prix total : </span>
+      <span class="tile is-child is-size-7">{{booking.price}} € </span>
+    </p>
+    </div>
+  </div>
+
+  <div class="tile is-child">
+    <div class="notification is-info">
+      <span class="is-size-7">
+        Nous vous invitons à consulter votre boite mail pour imprimer vos billets.<br>
+        Pour bénéficier de l'accès au Louvre, le document reçu par mail vous sera demandé le jour de votre visite.<br>
+        Un controle d'identité pourra également être effectué.
+      </span>
+    </div>
+  </div>
+
+{% endblock %}

@@ -8,19 +8,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 //use pour les entitées
 use NS\CheckoutBundle\Entity\Booking;
 use NS\CheckoutBundle\Entity\Ticket;
+use NS\CheckoutBundle\Entity\BookingTicket;
 
 //use pour l'objet request
 use Symfony\Component\HttpFoundation\Request;
 
 //use pour le formulaire
-use NS\CheckoutBundle\Form\BookingType;
-
-//use pour les chams de formulaire
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use NS\CheckoutBundle\Form\BookingStepOneType;
+use NS\CheckoutBundle\Form\BookingStepTwoType;
+use NS\CheckoutBundle\Form\BookingStepThreeType;
 
 
 class DefaultController extends Controller
@@ -28,128 +24,243 @@ class DefaultController extends Controller
 
     public function indexAction(Request $request)
     {
+        // On redirige vers l'étape  4
+        if($request->getSession()->get('step') == 'completed'){
+            return $this->forward('NSCheckoutBundle:Default:stepFor');    
+        }
+
+        // On redirige vers l'étape 3 
+        if($request->get('booking_stepThree')){
+            return $this->forward('NSCheckoutBundle:Default:stepThree');    
+        }
+        
+        // On redirige vers l'étape 2
+        if($request->get('booking_stepTwo')){
+            return $this->forward('NSCheckoutBundle:Default:stepTwo');   
+        }
+
+        // On redirige vers l'étape 1
+        return $this->forward('NSCheckoutBundle:Default:stepOne');
+    }
+
+    public function stepOneAction(Request $request)
+    {
         $step = 1;
-
-        // On récupère l'entité manager
-        $em = $this->getDoctrine()->getManager();
-
+        $request->getSession()->set('step','inProgress');
         // On crée un objet Booking
         $booking = new Booking();
 
-        $tickets = $em
-            ->getRepository('NSCheckoutBundle:Ticket')
-            ->FindAll();
+        // On récupère l'entité manager et les repositories
+        $em = $this->getDoctrine()->getManager();
+        $repTicket = $em->getRepository('NSCheckoutBundle:Ticket');
+
+        // On récupère les types de tickets
+        $tickets = $repTicket->findByName('billet');
 
         // On crée le FormBuilder grâce au service form factory
-        $form = $this->createForm(BookingType::class, $booking);
-
-        $form->handleRequest($request);
-
+        $form = $this
+            ->createForm(BookingStepOneType::class, $booking)
+            ->handleRequest($request);
+         
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // On récupère les données du formulaire
+            $booking = $form->getData();
 
-            $datas = $form->getData();
+            for ($i=0; $i < $booking->getSpaces() ; $i++) { 
+                $ticket = $repTicket->findOneByName('normal');
+                $bookingTicket = new BookingTicket();
+                $bookingTicket->setTicket($ticket);
+                $bookingTicket->setBooking($booking);
+                $booking->addTicket($bookingTicket);
+            } 
 
-            $tickets = array_filter($request->get('ns_checkoutbundle_booking'),function($key) {
-                return in_array($key,['ticket-normal','ticket-senior','ticket-enfant']);
-            },ARRAY_FILTER_USE_KEY);
+            // On récupère le service upBooking
+            // Et on traite les données avec ce service
+            $upBooking = $this->container->get('ns_checkout.services.up_booking');
+            $booking = $upBooking->update($booking);
 
-            var_dump($tickets);
-                    
-            return $this->forward('NSCheckoutBundle:Default:particulars',compact(
-                'step',
-                'datas',
-                'tickets'
-            ));
+            $request->getSession()
+                    ->set('booking', $booking);
+
+            return $this->forward('NSCheckoutBundle:Default:stepTwo');
         }
+;
+        // Si le formulaire n'est ni soumis ni valide
+        // --> On affiche la vue
         $form = $form->createView();
-        return $this->render('NSCheckoutBundle:Default:index.html.twig',compact(
+        return $this->render('NSCheckoutBundle:Default:stepOne.html.twig',compact(
             'step',
             'tickets',
             'form'
         ));
-    }
-    public function particularsAction($step, $datas,$tickets, Request $request)
+    } 
+
+    public function stepTwoAction(Request $request)
     {
-        $step ++;   
-        
-        $summary = [
-            'selected_date' => new \DateTime(),
-            'tickets' =>[
+        $step = 2; 
 
-                [
-                    'name'    => 'normal',
-                    'priceUnitaire' => '16',
-                    'nb' => 2,
-                    'priceTotal' => 2*16,
-                ],
-                [
-                    'name'    => 'senior',
-                    'price' => '12',
-                    'nb' => 2,
-                    'priceTotal' => 2*12,
-                ],
-                [
-                    'name'    => 'enfant',
-                    'price' => '8',
-                    'nb' => 1,
-                    'priceTotal' => 1*8,
-                ],
-            ],
-            'subtotal' => 16*2 + 12*2 + 8*1,
-            'total' => 16*2 + 12*2 + 8*1
-        ];       
-        
-        $form = $this->createFormBuilder()
-            ->add('userName', TextType::class)       
-            ->add('country', CountryType::class,[
-                'preferred_choices' => array('FR')
-            ])          
-            ->add('birthday', DateType::class)          
-            ->getForm();
+        // On récupère l'entité manager et les repositories
+        $em = $this->getDoctrine()->getManager();
+        $repBooking = $em->getRepository('NSCheckoutBundle:Booking');
 
-        $form->handleRequest($request);
+        // On récupère l'objet booking enregistré en session
+        $booking = $request->getSession()->get('booking');
+
+        // Si l'objet booking enregistré en session a un ID
+        // -->On récupère l'objet booking de la BDD correspondant
+        if ($booking->getId()) {
+            $booking = $repBooking->find($booking);
+        }
+
+        // On crée le FormBuilder grâce au service form factory
+        $form = $this
+            ->createForm(BookingStepTwoType::class, $booking)      
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // data is an array with "name", "email", and "message" keys
-            $datas = $form->getData();
-            return $this->forward('NSCheckoutBundle:Default:payment',compact(
-                'step',
-                'summary'
-            ));
             
-            var_dump($datas);
-            // $em->persist($datas);  
+            // On récupère le service
+            // Et on traite les données avec ce service
+            $upBooking = $this->container->get('ns_checkout.services.up_booking');
+            $booking = $upBooking->update($form->getData());
             
-        }
+            $request->getSession()->set('booking', $booking);
 
-        // var_dump($test);
-        
+            // Puis on enregistre les données en bdd avec le status 0
+            $em->persist($booking);
+            $em->flush($booking);
 
-        // if ($request->request->all() == 'POST') {
-        // }
+            return $this->forward('NSCheckoutBundle:Default:stepThree');     
+        } 
+
+        // Si le formulaire n'est ni soumis ni valid
+        // On affiche la vue
         $form = $form->createView();
-        return $this->render('NSCheckoutBundle:Default:particulars.html.twig', compact(
+        return $this->render('NSCheckoutBundle:Default:stepTwo.html.twig', compact(
             'step',
-            'summary',
+            'booking',
             'form'
         ));
+    }
+    
+    public function stepThreeAction(Request $request)
+    {
+        $step = 3; 
+        
+        // On récupère l'entité manager et les repositories
+        $em = $this->getDoctrine()->getManager();
+        $repBooking = $em->getRepository('NSCheckoutBundle:Booking');
 
-    }
-    public function paymentAction($step, $summary, Request $request)
-    {
-        if ($request->getMethod() == 'POST') {
-            return $this->forward('NSCheckoutBundle:Default:confirmation',compact(
-                'summary'
-            ));
+        // On récupère l'objet booking enregistré en session
+        $booking = $request->getSession()->get('booking');
+
+        // Si l'objet booking enregistré en session a un ID
+        // -->On récupère l'objet booking de la BDD correspondant
+        if ($booking->getId()) {
+            $booking = $repBooking->find($booking);
         }
-        return $this->render('NSCheckoutBundle:Default:payment.html.twig', compact(
-            'summary'
+
+        // On crée le FormBuilder grâce au service form factory
+        $form = $this
+            ->createForm(BookingStepThreeType::class, $booking,[
+                'attr' => ['id'=>'booking_stepThree']
+            ])     
+            ->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // On récupère les datas booking du formulaire
+            $booking = $form->getData();
+
+            $liveTime = $this->container->get('ns_checkout.services.live_time')
+                                        ->validate($booking,30);
+            if($liveTime != "true") return  $liveTime;           
+
+            // On récupère le service stripe
+            $stripe = $this->container->get('ns_checkout.services.stripe');
+
+            // On vérifie si l'email exist déjà
+            $hasMail = $repBooking->findOneByUserMail($booking->getUserMail());
+
+            if (!$hasMail) {
+
+                $customer = $stripe->api("customers",[
+                    "source"      => $request->get("stripeToken"),
+                    "description" => $request->get("booking_stepThree")["userName"],
+                    "email"       => $booking->getUserMail()
+                ]);
+
+            } else {
+                $customer = $stripe->api("customers/{$hasMail->getCustomerId()}",[
+                    "source"      => $request->get("stripeToken")
+                ]);
+            }
+
+            $charge = $stripe->api('charges',[
+                "amount"   => $booking->getPrice() * 100,
+                "currency" => 'eur',
+                "customer" => $customer->id
+            ]);
+            
+            // On modifie quelques valeurs du booking
+            $booking->setStatus(1);
+            $booking->setCustomerId($customer->id);
+
+        
+            // Puis on enregistre le booking en BDD 
+            $em->flush($booking);
+
+            // On récupère le service bookingMailer
+            // Et on envoi un mail avec les coordonnées du booking
+            $bookingMailer = $this->container->get('ns_checkout.services.booking_mailer');
+            $bookingMailer->sendBookingSuccessMessage($booking);
+
+            return $this->forward('NSCheckoutBundle:Default:stepFor');   
+        }
+
+        $form = $form->createView();
+        return $this->render('NSCheckoutBundle:Default:stepThree.html.twig', compact(
+            'step',
+            'booking',
+            'form'
         ));
     }
-    public function confirmationAction($summary, Request $request)
+
+    public function stepForAction(Request $request)
     {
-        return $this->render('NSCheckoutBundle:Default:confirmation.html.twig', compact(
-            'summary'
+        $step = 4;
+        
+         // On récupère l'entité manager et les repositories
+        $em = $this->getDoctrine()->getManager();
+        $repBooking = $em->getRepository('NSCheckoutBundle:Booking');
+
+        // On récupère l'objet booking enregistré en session puis on supprime la session
+        $booking = $request->getSession()->get('booking');
+        $request->getSession()->remove('booking');
+
+        if($request->getSession()->get('step') == 'completed'){
+            return $this->forward('NSCheckoutBundle:Default:exit');   
+        }
+
+        // Si l'objet booking enregistré en session a un ID
+        // -->On récupère l'objet booking de la BDD correspondant
+        if ($booking && $booking->getId()) {
+            $booking = $repBooking->find($booking);
+        }
+
+        $request->getSession()->set('step','completed');
+        return $this->render('NSCheckoutBundle:Default:stepFor.html.twig', compact(
+            'step',
+            'booking'
         ));
+    }
+
+    public function exitAction(Request $request)
+    {
+        $request->getSession()->remove('booking');
+        $request->getSession()->remove('step');
+        return $this->redirectToRoute('ns_ticketing_homepage'); 
     }
 }

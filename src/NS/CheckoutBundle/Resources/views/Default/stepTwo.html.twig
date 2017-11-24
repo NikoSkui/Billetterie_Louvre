@@ -1,0 +1,101 @@
+{% extends "NSCheckoutBundle::layout.html.twig" %}
+
+
+{% block bodyCheckoutLeft %}
+
+  <div class="tile is-child" style="flex-grow:0;">
+    <h2 class="subtitle">Saisissez les informations relatives aux billets</h2>
+    <div class="notification is-info">
+      <span class="is-size-7">
+        Veuillez saisir l'ensemble des informations demandées pour le ticket.<br>
+        Une pièce d'identité pourra vous être demandé à l'entrée du musée pour un controle de sécurité.
+      </span>
+    </div>
+  </div>
+
+
+
+  {% if form_errors(form) %}
+    {% include "NSCheckoutBundle:Components:formErrors.html.twig" %}
+  {% endif %}
+
+  {% for k,ticket in form.tickets %}
+    <div id='ticket-{{booking.tickets[k].ticket.name}}-{{k}}' 
+        class="ticket-{{booking.tickets[k].ticket.name}} card columns is-gapless card-to-ticket" 
+        data-ticket="{{k}}"
+        data-ticketname="{{booking.tickets[k].ticket.name}}"
+        data-ticketimage="{{booking.tickets[k].ticket.image}}"
+        data-ticketprice="{{booking.tickets[k].ticket.price}}"
+    >
+      <div class="card-image column is-2">
+        <figure class="image is-scale">
+          <img id="ticket-image" src="{{ asset('bundles/nscheckout/img/components/ticket/'~ booking.tickets[k].ticket.image)}}" alt="Placeholder image">
+        </figure>
+      </div>
+      <div class="card-content column is-10">
+        <div class="media">
+          <div class="media-content">
+            <div class="columns">
+              <div class="column is-3">
+                <p class="title is-5">Billet tarif</p>
+                <p id="ticket-name" class="subtitle is-6">{{booking.tickets[k].ticket.name}}</p>
+              </div>
+              <div class="field column">
+                <div class="control">
+                  {{ form_widget(ticket.userName, {'attr': {'class': 'input','placeholder':'Prénom et Nom'}}) }}
+                </div>
+                {% if form_errors(ticket.userName) %}
+                  <div class="help is-danger">{{ form_errors(ticket.userName) }}</div> 
+                {% else %}
+                  <div style="height:22px"></div> 
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="columns  columns-gap" >
+            <div class="column is-5" style="padding-bottom:0;">
+              <label class="country">Pays</label>
+              <div class="control">
+                <div class="select is-small ">
+                  {{ form_widget(ticket.country) }}
+                </div>
+              </div>
+            </div>
+            <div class="column" style="padding-bottom:0;">
+              <label class="birthday">Date de naissance</label>
+              <div class="control">
+                <div class="select select-birthday is-small ">
+                  {{ form_widget(ticket.birthday, {'attr': {'class': 'birthday'}} ) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="columns  columns-gap" >
+            <div id="ticket-isReduce" class="column is-half is-offset-half {% if booking.tickets[k].ticket.name == 'enfant' %} is-hidden {% endif%}" style="display:flex;justify-content:flex-end;">
+              <label class="checkbox has-text-right">
+                Tarif réduit
+                {{ form_widget(ticket.isReduce) }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>       
+  {% endfor %}
+
+{% endblock %}
+
+{% block javascript %}
+  {% javascripts 
+    'bundles/nscheckout/js/common/main.js'  
+    'bundles/nscheckout/js/components/stepTwo.js'  
+    'bundles/nscheckout/js/components/booking.js'  
+  %}
+      <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+{% endblock %}

@@ -65,6 +65,7 @@ class MyDatePicker {
     this.options = Object.assign({}, defaultOptions, options);
 
     this.hasTicket = 0;
+    this.ticketLouvre = null;
 
     this.month = this.options.startDate.getMonth(),
       this.year = this.options.startDate.getFullYear(),
@@ -120,12 +121,11 @@ class MyDatePicker {
     return abbr ? datepicker_langs[this.options.lang].weekdaysShort[day] : datepicker_langs[this.options.lang].weekdays[day];
   }
 
-  renderDay(day, month, year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut) {
+  renderDay(day, month, year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut,isRemaining) {
     var _this = this;
     var newDayContainer = document.createElement('div');
     var newDay = document.createElement('div');
     var newDayButton = document.createElement('button');
-
 
     newDayButton.classList.add('date-item');
     newDayButton.innerHTML = day;
@@ -140,21 +140,23 @@ class MyDatePicker {
       var allDayContainer = $(".calendar-date.is-active");
       
       var ticketDateElement = $("#ticketDate");
-      var ticketDateFormElement = $("#ns_checkoutbundle_booking_date");
+      var ticketDateFormElement = $("#booking_stepOne_date");
       var ticketDateToElement = _this.getFormatedDate(( new Date(year, month, day) ), 'd M. yyyy');
       var ticketDateToFormElement = _this.getFormatedDate(( new Date(year, month, day) ), 'dd/mm/yyyy');
+
 
       ticketDateElement.text(ticketDateToElement);
       ticketDateFormElement.val(ticketDateToFormElement);
       allDayContainer.removeClass('is-active');
       newDayContainer.classList.add('is-active');
 
-      var dateTicket = new Date(ticketDateElement.text())
-
-      if (dateTicket != 'Invalid Date' && _this.hasTicket == 0 ) {
+      if (!_this.ticketLouvre ) {
+        
+        var ticketLouvre = Ticket.create();
         _this.hasTicket = 1;
-        addTicket();
+        _this.ticketLouvre = ticketLouvre;
       }
+      _this.ticketLouvre.remainingToDate(ticketDateToFormElement)
      
       if (_this.options.closeOnSelect) {
         _this.hide();
@@ -163,12 +165,18 @@ class MyDatePicker {
     });
 
     newDay.appendChild(newDayButton);
+
+    newDayContainer.dataset.fulldate = day + '/' + (month+1) + '/' + year;
     newDayContainer.classList.add('calendar-date');
     newDayContainer.appendChild(newDay);
 
 
     newDay.classList.add('calendar-date');
+    if (isRemaining) {
+      newDayContainer.dataset.remaining ='';
+    }
     if (isDisabled) {
+      newDayContainer.dataset.disabled = "";
       newDayContainer.setAttribute('disabled', 'disabled');
     }
     if (isToday) {
@@ -197,6 +205,7 @@ class MyDatePicker {
 
     var previousButtonContainer = document.createElement('div');
     previousButtonContainer.classList.add('calendar-nav-left');
+    previousButtonContainer.dataset.navcalendar = '';
     this.previousYearButton = document.createElement('div');
     this.previousYearButton.classList.add('button');
     this.previousYearButton.classList.add('is-text');
@@ -222,7 +231,7 @@ class MyDatePicker {
     this.previousMonthButton.appendChild(previousMonthButtonIcon);
     this.previousMonthButton.addEventListener('click', function (e) {
       e.preventDefault();
-
+      
       _this.prevMonth();
     });
     if(month > now.getMonth() || year > now.getFullYear()) {
@@ -235,6 +244,7 @@ class MyDatePicker {
 
     var nextButtonContainer = document.createElement('div');
     nextButtonContainer.classList.add('calendar-nav-right');
+    nextButtonContainer.dataset.navcalendar = '';    
     this.nextMonthButton = document.createElement('div');
     this.nextMonthButton.classList.add('button');
     this.nextMonthButton.classList.add('is-text');
@@ -291,11 +301,25 @@ class MyDatePicker {
   }
 
   renderCalendar() {
+
     var d = new Date();
     var curr_date = d.getDate();
     var curr_month = d.getMonth(); //Months are zero based
     var curr_year = d.getFullYear();
     now = new Date(curr_year,curr_month,curr_date);
+
+
+    var ticketDateElement = $("#ticketDate");
+    if (document.getElementById( 'booking_stepOne_date' )) {
+      var ticketDateFormElement = document.getElementById( 'booking_stepOne_date' ).value;
+      if (ticketDateFormElement) {
+        this.hasTicket = 1;
+        var date = ticketDateFormElement.split('/');
+        var ticketDateToElement = this.getFormatedDate(( new Date(date[2],date[1]-1,date[0]) ), 'd M. yyyy');
+        ticketDateElement.text(ticketDateToElement);
+      }
+    }
+    
     var ticketDateValue = new Date($("#ticketDate").text());
 
     var calendarNav = this.renderNav(this.year, this.month);
@@ -327,7 +351,6 @@ class MyDatePicker {
     while (after > 7) {
       after -= 7;
     }
-
     cells += 7 - after;
     for (var i = 0; i < cells; i++) {
       var day = new Date(this.year, this.month  , 1 + ( i - before )),
@@ -337,20 +360,28 @@ class MyDatePicker {
         isSelectedOut = false,
         isToday = this.compareDates(day, now),
         isEmpty = i < before || i >= ( days + before ),
-        isDisabled = false;
+        isDisabled = false,
+        isRemaining = false;
 
       if (!isSelected) {
         isSelectedIn = false;
         isSelectedOut = false;
       }
 
-      if (day.getMonth() !== this.month ||
-        day < now
+      var remaining = null;
+
+      if (day.getMonth() !== this.month 
+        || day < now                                      // TOUS LES JOURS AVANT AUJOURD'HUI
+        || day.getDay() == 2                              // TOUS LES MARDI                 
+        || (day.getDate() == 1 && day.getMonth() == 4)    // 1 MAI                        
+        || (day.getDate() == 1 && day.getMonth() == 10)   // 1 NOVEMBRE
+        || (day.getDate() == 25 && day.getMonth() == 11)  // 25 DECEMBRE
       ) {
         isDisabled = true;
+      } else {
+        isRemaining = true;
       }
-
-      calendarBody.append(this.renderDay(day.getDate(), this.month, this.year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut));
+      calendarBody.append(this.renderDay(day.getDate(), this.month, this.year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut,isRemaining));
     }
   }
 

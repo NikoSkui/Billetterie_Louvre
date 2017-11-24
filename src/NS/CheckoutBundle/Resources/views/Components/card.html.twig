@@ -8,59 +8,93 @@
   </div>
   <div class="card-content">
     <div class="content">
-      <p><span class="title is-6">Musée du Louvre</span></p>
+      <p><span class="title is-6">Musée du Louvre {% if booking is defined and booking.isHalf is defined and booking.isHalf %} <span data-ishalf class="is-size-8">(demi-journée)</span>{% endif %}</span></p>
       <div class="columns is-gapless is-marginless">
         <div class="column is-two-thirds is-size-7">Date de la visite</div>
         <div id="ticketDate" class="column is-size-7">
-          {% if summary is defined  %}
-            {{summary.selected_date|date('j M. Y')}}
+          {% if booking is defined  %}
+             {{booking.date|date('j M. Y')}} 
           {% else %}
             -
           {% endif %}
         </div>
       </div>
-      {% if summary is defined  %}
-        {% for ticket in summary.tickets %}
-          <div class="columns is-gapless is-marginless">
-            <div class="column is-two-thirds is-size-7">{{ ticket.nb }}x {{ ticket.name|capitalize }}</div>
-             <div id="price-subtotal" class="column is-size-7">€{{ ticket.priceTotal }},00</div> 
-          </div>
-        {% endfor %}
+      {% if booking is defined  %}
+        <div id="ticket-resume">
+          {% for k, typeOfTicket in booking.TicketsByType %}
+            <div id="ticket-{{typeOfTicket.ticket.name}}-resume{% if typeOfTicket.isReduce %}-reduce{% endif %}"
+                class="columns is-gapless is-marginless"
+                data-name = {{ typeOfTicket.ticket.name }}
+                data-nombre = {{ booking.Count(typeOfTicket) }}
+                data-price = {{ typeOfTicket.price|slice(0, 2) }}
+            >
+              <div id="resume-nbr" class="column is-two-thirds is-size-7">
+                {{ booking.Count(typeOfTicket) }}x 
+                {{ typeOfTicket.ticket.name|capitalize }}
+                {% if typeOfTicket.isReduce %} <span class="is-size-8">(tarif réduit)</span>{% endif %}
+              </div> 
+              <div id="price-subsubtotal" class="column is-size-7">
+                €{{ booking.TicketsPriceByType(typeOfTicket)|number_format(2, ',') }}
+              </div>  
+            </div>
+          {% endfor %}
+        </div>
       {% else %}
         <div id="ticket-resume"></div>
       {% endif %}
 
 
-      <div class="columns is-gapless is-marginless">
-        <div class="column is-two-thirds is-size-7">Sous-total</div>
-        <div id="price-subtotal" class="column is-size-7">
-          {% if summary is defined  %}
-            €{{summary.subtotal}},00
-          {% else %}
-            €0,00
-          {% endif %}
+      {% if step == 1 %}
+        <hr>
+        <div class="columns is-gapless is-marginless">
+          <div class="column is-two-thirds is-size-5 title">Nombre-total</div>
+          <div id="number-total" class="column is-size-5 title">
+            {% if booking is defined  %}
+              {{booking.spaces}}
+            {% else %}
+              0
+            {% endif %}
+          </div>
         </div>
-      </div>
-      <hr>
-      <div class="columns is-gapless is-marginless">
-        <div class="column is-two-thirds is-size-5 title">Prix-total</div>
-        <div id="price-total" class="column is-size-5 title">
-          {% if summary is defined  %}
-            €{{summary.total}},00
-          {% else %}
-            €0,00
-          {% endif %}
+      {% elseif step > 1 %}
+        <div class="columns is-gapless is-marginless">
+          <div class="column is-two-thirds is-size-7">Sous-total</div>
+          <div id="price-subtotal" class="column is-size-7">
+            {% if booking is defined  %}
+              €{{booking.Price|number_format(2, ',')}}
+            {% else %}
+              €0,00
+            {% endif %}
+          </div>
         </div>
-      </div>
+        <hr>
+        <div class="columns is-gapless is-marginless">
+          <div class="column is-two-thirds is-size-5 title">Prix-total</div>
+          <div id="price-total" class="column is-size-5 title">
+            {% if booking is defined  %}
+              €{{booking.Price|number_format(2, ',')}}
+            {% else %}
+              €0,00
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      
       <p class="has-mt-5">
-          <button class="button is-link is-fullwidth is-medium">
+        {% if step < 4 %}
+          <button id="stepButton" class="button is-link is-fullwidth is-medium">
             {% if step == 1 %}
               <span>Passez à l'étape suivante</span>
             {% endif %}
             {% if step == 2 %}
               <span>Confirmez votre réservation</span>
             {% endif %}
+            {% if step == 3 %}
+              <span>Payer €{{booking.Price|number_format(2, ',')}}</span>
+            {% endif %}
           </button>
+        {% endif %}
+      </p>
     </div>
   </div>
 </div>

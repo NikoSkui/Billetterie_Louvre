@@ -576,3 +576,11 @@
     background-color: #ff3860;
     color: #fff
 }
+
+.homepage .datepicker .calendar .calendar-date {
+    padding:0;
+}
+.homepage #datepiker {
+    margin-bottom:16px;
+    box-shadow: 0 0 1px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+}

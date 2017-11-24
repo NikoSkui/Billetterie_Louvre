@@ -4,7 +4,7 @@
         <ol class="checkout-steps__wrapper flexbox">
           <li class="checkout-steps__item 
             {% if step == 1 %} checkout-steps__item--active
-            {% elseif step > 1 %} checkout-steps__item--complete checkout-steps__item--accessible
+            {% elseif step == 2 %} checkout-steps__item--complete checkout-steps__item--accessible
             {% elseif step > 2 %} checkout-steps__item--complete 
             {% endif %}"
           >
@@ -17,7 +17,8 @@
           </li>
           <li class="checkout-steps__item 
             {% if step == 2 %}checkout-steps__item--active
-            {% elseif step > 2 %} checkout-steps__item--complete            
+            {% elseif step == 3 %} checkout-steps__item--complete checkout-steps__item--accessible          
+            {% elseif step > 3 %} checkout-steps__item--complete         
             {% endif %}"
           >
             <span class="checkout-steps__item__number flexbox center-xy">
@@ -27,7 +28,11 @@
             <span class="checkout-steps__item__status"></span>
             <span class="checkout-steps__item__arrow"></span>
           </li>
-          <li class="checkout-steps__item">
+          <li class="checkout-steps__item 
+            {% if step == 3 %}checkout-steps__item--active
+            {% elseif step > 3 %} checkout-steps__item--complete            
+            {% endif %}"
+          >
             <span class="checkout-steps__item__number flexbox center-xy">
               <span>3</span>
             </span>
@@ -35,7 +40,10 @@
             <span class="checkout-steps__item__status"></span>
             <span class="checkout-steps__item__arrow"></span>
           </li>
-          <li class="checkout-steps__item">
+          <li class="checkout-steps__item 
+            {% if step == 4 %}checkout-steps__item--active          
+            {% endif %}"
+          >
             <span class="checkout-steps__item__number flexbox center-xy">
               <span>4</span>
             </span>

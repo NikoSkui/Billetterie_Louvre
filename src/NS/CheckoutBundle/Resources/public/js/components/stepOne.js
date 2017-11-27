@@ -1,3 +1,7 @@
+document.addEventListener( 'DOMContentLoaded', function () {
+  Ticket.updateRemaining()
+})
+
 class Ticket {
 
   constructor(selector, options) {

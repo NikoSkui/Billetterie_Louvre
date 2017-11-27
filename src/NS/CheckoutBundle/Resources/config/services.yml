@@ -7,8 +7,8 @@ services:
 #       class: NS\CheckoutBundle\Services\ConfigCheckoutService
 #       arguments: []
 
-    ns_checkout.services.up_booking:
-        class: NS\CheckoutBundle\Services\UpBookingService
+    ns_checkout.services.up_prices_booking:
+        class: NS\CheckoutBundle\Services\UpPricesBookingService
         arguments: 
             - '@doctrine.orm.entity_manager'
 

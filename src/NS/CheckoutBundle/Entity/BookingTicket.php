@@ -38,7 +38,7 @@ class BookingTicket
      *      min = 5,
      *      max = 200,
      *      minMessage ="Vous devez entrer au moins {{ limit }} charactères",
-     *      minMessage ="Vous devez entrer moins de {{ limit }} charactères"
+     *      maxMessage ="Vous devez entrer moins de {{ limit }} charactères"
      * )
      */
     private $userName;

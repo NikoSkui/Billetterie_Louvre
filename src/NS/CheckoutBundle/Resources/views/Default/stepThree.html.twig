@@ -1,9 +1,21 @@
 {% extends "NSCheckoutBundle::layout.html.twig" %}
 
+{% block title %}Super ! Vous avez presque terminé{% endblock %}
 
 {% block bodyCheckoutLeft %}
 
-  <h2 class="subtitle">Vos coordonnées bancaires</h2>
+  <h1 class="title">Votre mode de paiement</h1>
+  
+  <div class="tile is-child" style="flex-grow:0;">
+    <p>
+      Vos tickets sont pré-réservés pour le Musée du Louvre. Pour recevoir vos billets, veuillez régler rapidement votre commande à l'aide de notre mode de paiement sécurisé.
+    </p>
+  </div>
+  <div class="tile is-child" style="flex-grow:0;">
+    <p class="subtitle is-5">Temps restant pour effectuer votre paiement : <span class="timer">20m 0s</span></p>  
+  </div>
+
+
 
   <div id="field-userMail" class="tile is-child" style="flex-grow:0;">
     <div class="field ">

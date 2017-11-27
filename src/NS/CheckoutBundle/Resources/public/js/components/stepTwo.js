@@ -24,8 +24,8 @@ class BookingTicket {
     this.imageElt = this.element.querySelector('#ticket-image')
     this.nameElt = this.element.querySelector('#ticket-name')
     this.priceReduce = 10;
-    this.isReduce = false;
     this.reduceElt = this.element.querySelector('#ticket-isReduce')
+    this.isReduce = this.reduceElt.querySelector('input[type=checkbox]').checked;
 
     this.options = Object.assign({}, defaultOptions, options);
 
@@ -53,20 +53,28 @@ class BookingTicket {
       e.preventDefault();
        if (_selectorChekbox.checked) {
             _this.isReduce = true;
-            _this.updateTicket()
+            _this.updateTicket('nocheck')
         } else {
             _this.isReduce = false;
-            _this.updateTicket()
+            _this.updateTicket('check')
             // do something else otherwise
         }
     }) 
+
+    _this.updateTicket()
+
   }
 
-  updateTicket() {
+  updateTicket(checkboxChange = false) {
     // Variables de date
     var now = new Date();
     var birthday = new Date(this.birthday_Year.value,this.birthday_Month.value-1,this.birthday_Day.value); 
     var age = this.calculateAge(birthday)
+
+    if (!this.birthday_Year.value) {
+      return  
+    }
+
     // Variables d'image
     var path = this.imageElt.src
 
@@ -74,15 +82,26 @@ class BookingTicket {
 
     if (age < 12){    
 
-        if(this.isReduce) {
+        // if(this.isReduce) {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        //   if(this.ticketName == 'enfant') {
+        //     var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //   }
+        // } else {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //   if(this.ticketName == 'enfant') {
+        //     var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        //   }
+        // }
+        if (checkboxChange == 'check') {
           var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-          if(this.ticketName == 'enfant') {
-            var oldElement = '#ticket-' + this.ticketName + '-resume';
-          }
-        } else {
+        } else if(checkboxChange == 'nocheck') {
           var oldElement = '#ticket-' + this.ticketName + '-resume';
-          if(this.ticketName == 'enfant') {
+        } else {
+          if (this.isReduce) {
             var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          } else {
+            var oldElement = '#ticket-' + this.ticketName + '-resume';
           }
         }
 
@@ -104,24 +123,40 @@ class BookingTicket {
         // Masquage du bouton isReduce
         this.reduceElt.classList.add("is-hidden") 
 
-        this.updateTicketSumary(newName,newPrice,oldElement)
+        this.updateTicketSumary(newName,newPrice,oldElement,checkboxChange)
 
     } else if(age >= 12 && age < 60){
 
-        if(this.isReduce) {
+        // if(this.isReduce) {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        //   if(this.ticketName == 'normal') {
+        //     var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //   }
+        // } else {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //   if(this.ticketName == 'normal') {
+        //     if (checkboxChange) {
+        //       var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        //     } else {
+        //       var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //     }
+        //   }
+        // }
+        // if(this.ticketName == 'enfant') {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
+        // }
+        if (checkboxChange == 'check') {
           var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-          if(this.ticketName == 'normal') {
+        } else if(checkboxChange == 'nocheck') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume';
+        } else {
+          if (this.isReduce) {
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          } else {
             var oldElement = '#ticket-' + this.ticketName + '-resume';
           }
-        } else {
-          var oldElement = '#ticket-' + this.ticketName + '-resume';
-          if(this.ticketName == 'normal') {
-            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-          }
         }
-        if(this.ticketName == 'enfant') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume';
-        }
+
 
         var newName = 'normal'
         if (this.isReduce) {
@@ -142,26 +177,40 @@ class BookingTicket {
         // Affichage du bouton isReduce
         this.reduceElt.classList.remove("is-hidden")
 
-        this.updateTicketSumary(newName,newPrice,oldElement)
+        this.updateTicketSumary(newName,newPrice,oldElement,checkboxChange)
 
     } else if(age >= 60){
 
-      console.log(this.isReduce)
-
-        if(this.isReduce) {
+        // if(this.isReduce) {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        //   if(this.ticketName == 'senior') {
+        //     var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //   }
+        // } else {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //   if(this.ticketName == 'senior') {
+        //     if (checkboxChange) {
+        //       var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        //     } else {
+        //       var oldElement = '#ticket-' + this.ticketName + '-resume';
+        //     }
+        //   }
+        // }
+        // if(this.ticketName == 'enfant') {
+        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
+        // }
+        if (checkboxChange == 'check') {
           var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-          if(this.ticketName == 'senior') {
+        } else if(checkboxChange == 'nocheck') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume';
+        } else {
+          if (this.isReduce) {
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          } else {
             var oldElement = '#ticket-' + this.ticketName + '-resume';
           }
-        } else {
-          var oldElement = '#ticket-' + this.ticketName + '-resume';
-          if(this.ticketName == 'senior') {
-            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-          }
         }
-        if(this.ticketName == 'enfant') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume';
-        }
+        console.log(this.isReduce)
       
         var newName = 'senior'  
         if (this.isReduce) {
@@ -182,7 +231,7 @@ class BookingTicket {
         
         // Affichage du bouton isReduce
         this.reduceElt.classList.remove("is-hidden")
-        this.updateTicketSumary(newName,newPrice,oldElement)
+        this.updateTicketSumary(newName,newPrice,oldElement,checkboxChange)
 
     }
   
@@ -194,7 +243,7 @@ class BookingTicket {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 
-  updateTicketSumary(valueCibleName,valueCiblePrice,oldElement) {
+  updateTicketSumary(valueCibleName,valueCiblePrice,oldElement,checkboxChange) {
 
     console.log(oldElement)
 
@@ -214,7 +263,9 @@ class BookingTicket {
     }
 
 
-    if (valueSourceName != valueCibleName || this.isReduce || !this.isReduce ) {
+    if ( (valueSourceName != valueCibleName)
+       ||(valueSourceName == valueCibleName && checkboxChange)
+    ) {
 
       var valueNewSourceNbTicket = parseFloat(valueSourceNbTicket) - 1
 
@@ -293,14 +344,9 @@ class BookingTicket {
     var eltSubTotalPrice = document.querySelector('#price-subtotal');
     var eltTotalPrice = document.querySelector('#price-total');
     var devise = this.options.devise; 
-
-    console.log(eltSubTotalPrice)
-    console.log(devise + total + this.options.decimal)
     
     eltSubTotalPrice.textContent = devise + total + this.options.decimal
     eltTotalPrice.textContent    = devise + total + this.options.decimal
-
-
   }
 
   createElement(type, classes, text, id, name, price, number) {

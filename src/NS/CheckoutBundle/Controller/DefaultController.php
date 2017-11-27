@@ -30,12 +30,12 @@ class DefaultController extends Controller
         }
 
         // On redirige vers l'étape 3 
-        if($request->get('booking_stepThree')){
+        if($request->getSession()->get('step') == '3'){
             return $this->forward('NSCheckoutBundle:Default:stepThree');    
         }
         
         // On redirige vers l'étape 2
-        if($request->get('booking_stepTwo')){
+        if($request->getSession()->get('step') == '2'){
             return $this->forward('NSCheckoutBundle:Default:stepTwo');   
         }
 
@@ -46,7 +46,7 @@ class DefaultController extends Controller
     public function stepOneAction(Request $request)
     {
         $step = 1;
-        $request->getSession()->set('step','inProgress');
+        $request->getSession()->set('step','1');
         // On crée un objet Booking
         $booking = new Booking();
 
@@ -55,7 +55,7 @@ class DefaultController extends Controller
         $repTicket = $em->getRepository('NSCheckoutBundle:Ticket');
 
         // On récupère les types de tickets
-        $tickets = $repTicket->findByName('billet');
+        $ticket = $repTicket->findOneByName('billet');
 
         // On crée le FormBuilder grâce au service form factory
         $form = $this
@@ -68,37 +68,33 @@ class DefaultController extends Controller
             $booking = $form->getData();
 
             for ($i=0; $i < $booking->getSpaces() ; $i++) { 
-                $ticket = $repTicket->findOneByName('normal');
+                // $ticket = $repTicket->findOneByName('normal');
                 $bookingTicket = new BookingTicket();
                 $bookingTicket->setTicket($ticket);
                 $bookingTicket->setBooking($booking);
                 $booking->addTicket($bookingTicket);
             } 
 
-            // On récupère le service upBooking
-            // Et on traite les données avec ce service
-            $upBooking = $this->container->get('ns_checkout.services.up_booking');
-            $booking = $upBooking->update($booking);
-
             $request->getSession()
                     ->set('booking', $booking);
 
             return $this->forward('NSCheckoutBundle:Default:stepTwo');
         }
-;
+
         // Si le formulaire n'est ni soumis ni valide
         // --> On affiche la vue
         $form = $form->createView();
         return $this->render('NSCheckoutBundle:Default:stepOne.html.twig',compact(
             'step',
-            'tickets',
+            'ticket',
             'form'
         ));
     } 
 
     public function stepTwoAction(Request $request)
     {
-        $step = 2; 
+        $step = 2;
+        $request->getSession()->set('step','2'); 
 
         // On récupère l'entité manager et les repositories
         $em = $this->getDoctrine()->getManager();
@@ -122,8 +118,8 @@ class DefaultController extends Controller
             
             // On récupère le service
             // Et on traite les données avec ce service
-            $upBooking = $this->container->get('ns_checkout.services.up_booking');
-            $booking = $upBooking->update($form->getData());
+            $upPricesBooking = $this->container->get('ns_checkout.services.up_prices_booking');
+            $booking = $upPricesBooking->updatePrice($form->getData());
             
             $request->getSession()->set('booking', $booking);
 
@@ -147,6 +143,7 @@ class DefaultController extends Controller
     public function stepThreeAction(Request $request)
     {
         $step = 3; 
+        $request->getSession()->set('step','3');
         
         // On récupère l'entité manager et les repositories
         $em = $this->getDoctrine()->getManager();

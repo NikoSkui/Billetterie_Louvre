@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 //use pour les chams de formulaire
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class BookingTicketType extends AbstractType
@@ -24,8 +24,13 @@ class BookingTicketType extends AbstractType
             ->add('country',CountryType::class,[
                 'preferred_choices' => ['FR']
             ])
-            ->add('birthday',DateType::class,[
-                'years' => range(date('Y')-150, date('Y')-4)
+            ->add('birthday',BirthdayType::class,[
+                'years' => range(date('Y')-120, date('Y')-4),   
+                'placeholder' => [
+                    'year'  => '--',
+                    'month' => '--',
+                    'day'   => '--',
+                ],
             ])
             ->add('isReduce',CheckboxType::class, [
                 'required' => false,

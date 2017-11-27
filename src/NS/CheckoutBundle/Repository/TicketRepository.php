@@ -22,6 +22,7 @@ class TicketRepository extends \Doctrine\ORM\EntityRepository
       ->getQuery()
       ->getResult();
   }
+  
   public function findAllTickets () {
     $qb = $this
       ->createQueryBuilder('t')

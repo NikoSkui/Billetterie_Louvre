@@ -1,5 +1,7 @@
 {% extends "NSCheckoutBundle::layout.html.twig" %}
 
+{% block title %}Etape 1 - {{parent()}}{% endblock %}
+
 
 {% block bodyCheckoutLeft %}
 
@@ -30,9 +32,7 @@
     {% include "NSCheckoutBundle:Components:formErrors.html.twig" %}
   {% endif %}
 
-  {% for ticket in tickets %}
-    {% include "NSCheckoutBundle:Components:ticket.html.twig" %}        
-  {% endfor %}
+  {% include "NSCheckoutBundle:Components:ticket.html.twig" %}        
 
   <div id="field-isHalf" class="tile is-child is-hidden" style="padding-bottom:0;flex-grow:0;">
     <label class="halfDay">Pour combien de temps ? </label>

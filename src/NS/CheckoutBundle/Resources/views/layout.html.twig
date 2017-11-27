@@ -1,5 +1,13 @@
 {% extends "NSTicketingBundle::layout.html.twig" %}
 
+{% block title %}Finalisez votre réservation - {{parent()}}{% endblock %}
+
+{% block logo %}            
+  <a class="navbar-item" href="{{ path('ns_checkout_exit') }}">
+    <span class="title has-text-white">My Ticket</span>
+  </a>
+{% endblock %} 
+
 {% block stylesheets %}
     {% stylesheets filter="scssphp,cssrewrite" output="css/app.css"
       'bundles/nsticketing/css/common/*.css'  
@@ -25,7 +33,7 @@
   {% if form is defined %}
     {{ form_start(form) }}
   {% endif %}
-    <section class="section" data-booking>
+    <section id="step-{{step}}" class="section" data-booking>
       <div class="container">
         <div class="tile is-ancestor" style="align-items:flex-start;">
             <div class="tile is-7 is-vertical is-parent" data-container style="min-height:100vh;justify-content:flex-start;">

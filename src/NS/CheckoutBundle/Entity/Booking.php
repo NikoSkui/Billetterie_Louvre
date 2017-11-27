@@ -156,11 +156,24 @@ class Booking
      */
     public function setPrice($price)
     {
-        $this->price += $price;
+        $this->price = $price;
 
         return $this;
     }
 
+    /**
+     * Set price
+     *
+     * @param string $price
+     *
+     * @return Booking
+     */
+    public function increasePrice($price)
+    {
+        $this->price += $price;
+
+        return $this;
+    }
     /**
      * Get price
      *
@@ -318,7 +331,7 @@ class Booking
             if(in_array($name,$nameList)) {
                 return false;
             }
-            $nameList []= $name;
+            $nameList [] = $name;
             return true;
         });
         return $ticketsByType;

@@ -22,7 +22,19 @@ document.addEventListener( 'DOMContentLoaded', function () {
         var today = now.getFullYear()+ '/' + (now.getMonth()+1) + '/' + now.getDate() 
         var daySelect = e.getFullYear()+ '/' + (e.getMonth()+1) + '/' + e.getDate() 
         var $selector = $('#booking_stepOne_isHalf')
+        var $spacesVal = $('#number-ticket').text()
+        var $remainingElt = $("[data-fulldate='"+e.getDate()+ '/' + (e.getMonth()+1) + '/' + e.getFullYear() +"']")
+        var $remainingVal = $remainingElt.attr('data-remaining')
+        var btnMore = $('#ticket-billet .more')
 
+        if ($remainingVal == $spacesVal ) {
+          btnMore.removeClass('is-active');
+          btnMore.addClass('is-disabled');
+        } else {
+          btnMore.addClass('is-active');
+          btnMore.removeClass('is-disabled');       
+        }
+        
         if (now.getHours() >= 14
             && today == daySelect   
         ) {
@@ -40,8 +52,6 @@ document.addEventListener( 'DOMContentLoaded', function () {
     if (dateTicket != 'Invalid Date') {
       addTicket();
     }
-
-    Ticket.updateRemaining()
 
   }
 

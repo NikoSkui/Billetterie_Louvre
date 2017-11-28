@@ -1,0 +1,25 @@
+<section class="hero is-shadowless header-homepage" >
+  <div class="hero-body is-paddingless">
+    <div class="container">
+      <div class="columns is-gapless">
+        {% for i in 1..3 %}
+          <div class="column">
+            <figure class="image is-square">
+              <img src="{{ asset('bundles/nsticketing/img/header/header_'~i~'.jpg') }}" alt="Louvre image-{{ i }}"/>
+            </figure>
+          </div>
+        {% endfor %}
+        {# <div class="column">
+          <figure class="image is-square">
+            <img src="https://aws-tiqets-cdn.imgix.net/images/content/556489d9b94c49a39e3bc9d7e1b3b0fa.jpg?auto=format&fit=crop&h=320&ixlib=python-1.1.2&q=70&w=320&s=c9d8164ca1bec9e19e9f29d391737d86" alt="">
+          </figure>
+        </div>
+        <div class="column">
+          <figure class="image is-square">
+            <img src="https://aws-tiqets-cdn.imgix.net/images/content/dd7388d528ee426fbdc39fd3533d3c10.jpg?auto=format&fit=crop&h=320&ixlib=python-1.1.2&q=70&w=320&s=662e8d3c7493aafd90cff028ebd0444e" alt="">
+          </figure>
+        </div> #}
+      </div>
+    </div>
+  </div>
+</section>

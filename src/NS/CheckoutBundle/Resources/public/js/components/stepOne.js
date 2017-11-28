@@ -157,6 +157,7 @@ class Ticket {
         } else {
           $ticketResume.append(summaryContainer);
         }    
+        _this.updateHalfDay()
       } else {
           $elementCible.remove();
       }
@@ -214,7 +215,7 @@ class Ticket {
         _this.options.moment = 'demi-journée'
       }
       $ticketTarget.text('À la ' + _this.options.moment )
-      if($cardTarget.length > 0) {
+      if($cardTarget.length > 0 && $cardTarget.text() != _this.options.moment) {
         $cardTarget.text(_this.options.moment)
       }
     }

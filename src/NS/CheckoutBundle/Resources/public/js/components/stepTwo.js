@@ -163,7 +163,6 @@ class BookingTicket {
             var oldElement = '#ticket-' + this.ticketName + '-resume';
           }
         }
-        console.log(this.isReduce)
       
         var newName = 'senior'  
         if (this.isReduce) {
@@ -197,8 +196,6 @@ class BookingTicket {
   }
 
   updateTicketSumary(valueCibleName,valueCiblePrice,oldElement,checkboxChange) {
-
-    console.log(oldElement)
 
     var ticketResume = document.getElementById('ticket-resume');
     var elementSource = ticketResume.querySelector(oldElement);

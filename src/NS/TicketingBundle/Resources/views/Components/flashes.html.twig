@@ -1,0 +1,12 @@
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+      <div class="tile is-parent is-vertical box notification is-{{label}}">
+        <h2 class="subtitle"><strong>Informations importantes</strong></h2>
+        <div class="tile is-ancestor is-vertical">
+        <p class="tile is-parent">
+          <span class="tile is-child">{{message}}</span>
+        </p>
+        </div>
+      </div>
+    {% endfor %}
+{% endfor %}

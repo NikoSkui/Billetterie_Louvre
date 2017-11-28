@@ -207,7 +207,7 @@ class DefaultControllerTest extends WebTestCase
         $form = $crawler->selectButton('stepButton')->form([
             'booking_stepThree[userMail]'        => 'toto@gmail.fr',
             'booking_stepThree[userName]'         => 'toto tata',
-        ]);
+        ]);@
 
         $this->client->submit($form);
 

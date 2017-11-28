@@ -3,32 +3,9 @@
 {% block title %}Billeterie du Louvre - {{parent()}}{% endblock %}
 
 {% block body %}
-  <section class="hero is-shadowless" 
-            style="background-image: url(https://aws-tiqets-cdn.imgix.net/images/content/fb572a4d2ba54f2a882731895d5c71d5.jpg?auto=format&fit=crop&h=20&ixlib=python-1.1.2&q=70&w=40&s=302296d3cf95b8e22caa49a93185bc62);
-                  background-size: cover;"
-    >
-    <div class="hero-body is-paddingless">
-      <div class="container">
-        <div class="columns is-gapless">
-          <div class="column">
-            <figure class="image is-square">
-              <img src="https://aws-tiqets-cdn.imgix.net/images/content/fb572a4d2ba54f2a882731895d5c71d5.jpg?auto=format&fit=crop&h=320&ixlib=python-1.1.2&q=70&w=320&s=238aeeeb8d8628dc94b12decf4d68a0f" alt="">
-            </figure>
-          </div>
-          <div class="column">
-            <figure class="image is-square">
-              <img src="https://aws-tiqets-cdn.imgix.net/images/content/556489d9b94c49a39e3bc9d7e1b3b0fa.jpg?auto=format&fit=crop&h=320&ixlib=python-1.1.2&q=70&w=320&s=c9d8164ca1bec9e19e9f29d391737d86" alt="">
-            </figure>
-          </div>
-          <div class="column">
-            <figure class="image is-square">
-              <img src="https://aws-tiqets-cdn.imgix.net/images/content/dd7388d528ee426fbdc39fd3533d3c10.jpg?auto=format&fit=crop&h=320&ixlib=python-1.1.2&q=70&w=320&s=662e8d3c7493aafd90cff028ebd0444e" alt="">
-            </figure>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+
+  {% include "NSTicketingBundle:Components:header.html.twig" %}
+
   <section class="hero">
     <div class="hero-body">
       <div class="container">
@@ -49,52 +26,16 @@
     <div class="container">
       <div class="columns">
         <div class="column is-two-thirds">
-          <div class="box">
-            <h3 class="title is-4">Aperçu</h3>
-            <hr>
-            <div class="columns">
-              <div class="column is-one-quarter">
-                <h4 class="title is-6">Horaires d'ouverture</h4>
-              </div>
-              <div class="column">
-                <p>Lundi, jeudi, samedi, dimanche : 9h00 - 18h00.</p>
-                <p>Mercredi, vendredi : 9h00 - 21h45.</p>
-                <p>Fermé le mardi, 1 mai, 1 novembre et 25 décembre.</p>
-              </div>
-            </div>
-            
-          </div>
+
+          {% include "NSTicketingBundle:Components:flashes.html.twig" %}
+
+          {% include "NSTicketingBundle:Components:infos.html.twig" %}
+
         </div>
         <div class="column" style="position:relative;top:-78px;">
-          <div class="card homepage">
-            <header class="card-header is-primary">
-              <p class="card-header-title has-text-white">
-              <span class="decimal">16</span>
-              <span class="cents">,00</span>
-              <span class="devise">€</span>
-              </p>
-            </header>
-            <div class="card-content">
-              <div class="content">
-                <p><span class="title is-6">Sélectionnez une date</span></p>
 
-                 {# <div id="datepicker" 
-                     style="margin-bottom:16px;
-                            box-shadow: 0 0 1px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);">
-                </div>  #}
-                
-                <a href="{{ path('ns_checkout_homepage') }}" 
-                   class="button is-link is-fullwidth is-medium"
-                >
-                  <span>Réserver maintenant</span>
-                </a>
+          {% include "NSTicketingBundle:Components:card.html.twig" %}
 
-                <p><span class="title is-6">Information importante</span></p>
-                <p>Si des personnes de votre groupe ont un accès gratuit pour le Louvre, ils peuvent entrer avec vous par l'Entrée Prioritaire.</p>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
     </div>
@@ -103,9 +44,8 @@
 
 
 {% block javascript %}
-  {% javascripts 
-    'bundles/nscheckout/js/common/main.js'  
-    'bundles/nscheckout/js/components/calendar.js'  
+  {% javascripts filter='jsqueeze'
+    'bundles/nscheckout/js/common/main.js'
   %}
       <script src="{{ asset_url }}"></script>
   {% endjavascripts %}

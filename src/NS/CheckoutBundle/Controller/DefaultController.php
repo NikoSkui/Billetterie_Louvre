@@ -239,7 +239,7 @@ class DefaultController extends Controller
 
         // On récupère l'objet booking enregistré en session puis on supprime la session
         $booking = $request->getSession()->get('booking');
-        $request->getSession()->remove('booking');
+        // $request->getSession()->remove('booking');
 
         // Si l'objet booking enregistré en session a un ID
         // -->On récupère l'objet booking de la BDD correspondant
@@ -248,7 +248,8 @@ class DefaultController extends Controller
         }
 
         if($request->getSession()->get('step') == 'completed'){
-            return $this->forward('NSCheckoutBundle:Default:exit');   
+            $this->container->get('ns_checkout.services.exit')->goAway();
+            return $this->redirectToRoute('ns_ticketing_homepage');  
         }
 
         $request->getSession()->set('step','completed');
@@ -256,12 +257,5 @@ class DefaultController extends Controller
             'step',
             'booking'
         ));
-    }
-
-    public function exitAction(Request $request)
-    {
-        $request->getSession()->remove('booking');
-        $request->getSession()->remove('step');
-        return $this->redirectToRoute('ns_ticketing_homepage'); 
     }
 }

@@ -44,8 +44,8 @@ class LiveTimeService
       // Puis on enregistre le booking en BDD 
       $this->em->flush($booking);
 
-      $session->remove('booking');
-      $session->remove('step');
+      // $session->remove('booking');
+      // $session->remove('step');
       $session->getFlashBag()->add(
           'danger',
           'Vous avez dépassé le temps imparti pour acheter les billets.'

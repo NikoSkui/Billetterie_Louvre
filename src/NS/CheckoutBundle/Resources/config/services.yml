@@ -46,7 +46,6 @@ services:
     ns_checkout.validator.constraints.child_with_parent:
         class: NS\CheckoutBundle\Validator\Constraints\ChildWithParentValidator
         arguments:
-            - "@request_stack"
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: validator.constraint_validator, alias: ns_checkout_child_with_parent }  

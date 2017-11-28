@@ -5,6 +5,8 @@ namespace NS\CheckoutBundle\Services;
 
 use Doctrine\ORM\EntityManagerInterface;
 
+use \NS\CheckoutBundle\Entity\Booking;
+
 class UpPricesBookingService
 {
   protected $em;
@@ -14,7 +16,7 @@ class UpPricesBookingService
     $this->em = $entityManager;
   }
 
-  public function updatePrice($booking)
+  public function updatePrice(Booking $booking)
   {
     $booking->resetPrice();
     

@@ -4,6 +4,7 @@
 namespace NS\CheckoutBundle\Services;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use \NS\CheckoutBundle\Entity\Booking;
 
 class LiveTimeService
 {
@@ -23,7 +24,7 @@ class LiveTimeService
     $this->em           = $em;
   }
 
-  public function validate($booking, $minuteMax)
+  public function validate(Booking $booking, $minuteMax)
   {
 
     // Pour récupérer l'objet Request tel qu'on le connait, 

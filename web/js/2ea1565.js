@@ -1,11 +1,50 @@
-var normal = {name:'normal', price : 16,parent:true};
-var senior = {name:'senior', price : 12,parent:true};
-var enfant = {name:'enfant', price : 8, parent:false};
-
 document.addEventListener( 'DOMContentLoaded', function () {
+
+  
   if (document.getElementById( 'datepicker' )) {
+
     var datePicker = new MyDatePicker( document.getElementById( 'datepicker' ), {
-      lang: 'fr'
+      lang: 'fr',
+      onRender: function(e){
+        e.open = true
+      },
+      onOpen: function(e) {
+        if (document.querySelector("[data-remaining]").dataset.remaining === ''){   
+          Ticket.updateRemaining()
+        }
+        if (e.ticketLouvre) {
+          e.ticketLouvre.updateCalendar()
+          e.ticketLouvre.updateHalfDay()
+        }
+      },
+      onSelect: function(e) {
+        var now = new Date()
+        var today = now.getFullYear()+ '/' + (now.getMonth()+1) + '/' + now.getDate() 
+        var daySelect = e.getFullYear()+ '/' + (e.getMonth()+1) + '/' + e.getDate() 
+        var $selector = $('#booking_stepOne_isHalf')
+        var $spacesVal = $('#number-ticket').text()
+        var $remainingElt = $("[data-fulldate='"+e.getDate()+ '/' + (e.getMonth()+1) + '/' + e.getFullYear() +"']")
+        var $remainingVal = $remainingElt.attr('data-remaining')
+        var btnMore = $('#ticket-billet .more')
+
+        if ($remainingVal == $spacesVal ) {
+          btnMore.removeClass('is-active');
+          btnMore.addClass('is-disabled');
+        } else {
+          btnMore.addClass('is-active');
+          btnMore.removeClass('is-disabled');       
+        }
+        
+        if (now.getHours() >= 14
+            && today == daySelect   
+        ) {
+          var $optionsToRemove = $selector.find('option[value="0"]');
+          removeOptions($selector, $optionsToRemove);   
+        } else {
+          restoreOptions($selector);
+        }
+      }
+
     });
     var $selectedDate = $('#ticketDate').text();
     var dateTicket = new Date($selectedDate)
@@ -13,9 +52,8 @@ document.addEventListener( 'DOMContentLoaded', function () {
     if (dateTicket != 'Invalid Date') {
       addTicket();
     }
+
   }
-
-
 
   if ($('.checkout-steps__item--accessible')) {
     $('.checkout-steps__item--accessible').click(function(e){
@@ -25,22 +63,20 @@ document.addEventListener( 'DOMContentLoaded', function () {
   }
 
 });
-
-function addTicket(tickets) {
-  
-  var tickets = [normal,senior,enfant]
-
-  for (let ticket of tickets) {
-    var newTicket = $( '#ticket-' + ticket.name )
-    newTicket.removeClass('is-hidden');
-    if (ticket.name != 'enfant') {
-      newTicket.removeClass('is-disabled')
+document.addEventListener( 'DOMContentLoaded', function () {
+  if ($("[data-booking]")) {
+    var booking = new Booking()
+  }  
+});
+class Booking {
+    constructor(selector, options) 
+    {
+      this.date;
+      this.isHalf;
+      this.spaces
+      this.tickets = BookingTicket.create('[data-ticket]');
     }
-    var ticketLouvre = new Ticket( newTicket, {
-      price: ticket.price,
-      parent: ticket.parent,
-    });
-  }
+
 }
 var now = null;
 var datepicker_langs = {
@@ -109,6 +145,7 @@ class MyDatePicker {
     this.options = Object.assign({}, defaultOptions, options);
 
     this.hasTicket = 0;
+    this.ticketLouvre = null;
 
     this.month = this.options.startDate.getMonth(),
       this.year = this.options.startDate.getFullYear(),
@@ -164,12 +201,11 @@ class MyDatePicker {
     return abbr ? datepicker_langs[this.options.lang].weekdaysShort[day] : datepicker_langs[this.options.lang].weekdays[day];
   }
 
-  renderDay(day, month, year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut) {
+  renderDay(day, month, year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut,isRemaining) {
     var _this = this;
     var newDayContainer = document.createElement('div');
     var newDay = document.createElement('div');
     var newDayButton = document.createElement('button');
-
 
     newDayButton.classList.add('date-item');
     newDayButton.innerHTML = day;
@@ -188,17 +224,19 @@ class MyDatePicker {
       var ticketDateToElement = _this.getFormatedDate(( new Date(year, month, day) ), 'd M. yyyy');
       var ticketDateToFormElement = _this.getFormatedDate(( new Date(year, month, day) ), 'dd/mm/yyyy');
 
+
       ticketDateElement.text(ticketDateToElement);
       ticketDateFormElement.val(ticketDateToFormElement);
       allDayContainer.removeClass('is-active');
       newDayContainer.classList.add('is-active');
 
-      var dateTicket = new Date(ticketDateElement.text())
-
-      if (dateTicket != 'Invalid Date' && _this.hasTicket == 0 ) {
+      if (!_this.ticketLouvre ) {
+        
+        var ticketLouvre = Ticket.create();
         _this.hasTicket = 1;
-        addTicket();
+        _this.ticketLouvre = ticketLouvre;
       }
+      _this.ticketLouvre.remainingToDate(ticketDateToFormElement)
      
       if (_this.options.closeOnSelect) {
         _this.hide();
@@ -207,12 +245,18 @@ class MyDatePicker {
     });
 
     newDay.appendChild(newDayButton);
+
+    newDayContainer.dataset.fulldate = day + '/' + (month+1) + '/' + year;
     newDayContainer.classList.add('calendar-date');
     newDayContainer.appendChild(newDay);
 
 
     newDay.classList.add('calendar-date');
+    if (isRemaining) {
+      newDayContainer.dataset.remaining ='';
+    }
     if (isDisabled) {
+      newDayContainer.dataset.disabled = "";
       newDayContainer.setAttribute('disabled', 'disabled');
     }
     if (isToday) {
@@ -241,6 +285,7 @@ class MyDatePicker {
 
     var previousButtonContainer = document.createElement('div');
     previousButtonContainer.classList.add('calendar-nav-left');
+    previousButtonContainer.dataset.navcalendar = '';
     this.previousYearButton = document.createElement('div');
     this.previousYearButton.classList.add('button');
     this.previousYearButton.classList.add('is-text');
@@ -266,7 +311,7 @@ class MyDatePicker {
     this.previousMonthButton.appendChild(previousMonthButtonIcon);
     this.previousMonthButton.addEventListener('click', function (e) {
       e.preventDefault();
-
+      
       _this.prevMonth();
     });
     if(month > now.getMonth() || year > now.getFullYear()) {
@@ -279,6 +324,7 @@ class MyDatePicker {
 
     var nextButtonContainer = document.createElement('div');
     nextButtonContainer.classList.add('calendar-nav-right');
+    nextButtonContainer.dataset.navcalendar = '';    
     this.nextMonthButton = document.createElement('div');
     this.nextMonthButton.classList.add('button');
     this.nextMonthButton.classList.add('is-text');
@@ -335,11 +381,25 @@ class MyDatePicker {
   }
 
   renderCalendar() {
+
     var d = new Date();
     var curr_date = d.getDate();
     var curr_month = d.getMonth(); //Months are zero based
     var curr_year = d.getFullYear();
     now = new Date(curr_year,curr_month,curr_date);
+
+
+    var ticketDateElement = $("#ticketDate");
+    if (document.getElementById( 'booking_stepOne_date' )) {
+      var ticketDateFormElement = document.getElementById( 'booking_stepOne_date' ).value;
+      if (ticketDateFormElement) {
+        this.hasTicket = 1;
+        var date = ticketDateFormElement.split('/');
+        var ticketDateToElement = this.getFormatedDate(( new Date(date[2],date[1]-1,date[0]) ), 'd M. yyyy');
+        ticketDateElement.text(ticketDateToElement);
+      }
+    }
+    
     var ticketDateValue = new Date($("#ticketDate").text());
 
     var calendarNav = this.renderNav(this.year, this.month);
@@ -371,7 +431,6 @@ class MyDatePicker {
     while (after > 7) {
       after -= 7;
     }
-
     cells += 7 - after;
     for (var i = 0; i < cells; i++) {
       var day = new Date(this.year, this.month  , 1 + ( i - before )),
@@ -381,20 +440,28 @@ class MyDatePicker {
         isSelectedOut = false,
         isToday = this.compareDates(day, now),
         isEmpty = i < before || i >= ( days + before ),
-        isDisabled = false;
+        isDisabled = false,
+        isRemaining = false;
 
       if (!isSelected) {
         isSelectedIn = false;
         isSelectedOut = false;
       }
 
-      if (day.getMonth() !== this.month ||
-        day < now
+      var remaining = null;
+
+      if (day.getMonth() !== this.month 
+        || day < now                                      // TOUS LES JOURS AVANT AUJOURD'HUI
+        || day.getDay() == 2                              // TOUS LES MARDI                 
+        || (day.getDate() == 1 && day.getMonth() == 4)    // 1 MAI                        
+        || (day.getDate() == 1 && day.getMonth() == 10)   // 1 NOVEMBRE
+        || (day.getDate() == 25 && day.getMonth() == 11)  // 25 DECEMBRE
       ) {
         isDisabled = true;
+      } else {
+        isRemaining = true;
       }
-
-      calendarBody.append(this.renderDay(day.getDate(), this.month, this.year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut));
+      calendarBody.append(this.renderDay(day.getDate(), this.month, this.year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut,isRemaining));
     }
   }
 
@@ -1095,6 +1162,692 @@ class DatePicker {
     return a.getTime() === b.getTime();
   }
 }
+document.addEventListener( 'DOMContentLoaded', function () {
+  Ticket.updateRemaining()
+})
+
+class Ticket {
+
+  constructor(selector, options) {
+
+    if (!options) options = {};
+    var defaultOptions = {
+      nbMax: 9,
+      moment: 'Journée',
+      fields: [],
+    };
+
+    this.element = typeof selector === 'string' ? document.querySelector(selector) : selector;
+    // An invalid selector or non-DOM node has been provided.
+    if (!this.element) {
+      throw new Error('An invalid selector or non-DOM node has been provided.');
+    }
+    this.id = this.element.attr('id')
+    this.eltNbTicket = this.element.find('#number-ticket');
+    this.parentNbTicket = this.eltNbTicket.parent();
+    this.eltTypeOfTicket = this.element.find('#typeOfTicket');
+    this.eltPrice = this.element.find('#price');
+    this.btnMore = this.element.find('.more');
+    this.btnLess = this.element.find('.less');
+    this.remainingTicket = 0
+    this.nbTicket = 0
+
+    this.options = Object.assign({}, defaultOptions, options);
+  
+    this.build();
+  }
+
+  build() {
+    var _this = this;
+    var $elementFormspaces = $('#booking_stepOne_spaces');
+    var inputValue = document.getElementById('booking_stepOne_spaces').value;
+
+    if(inputValue) {
+
+      var childTicket = $('#ticket-enfant');
+      childTicket.removeClass('is-disabled');
+      childTicket.find('.more').addClass('is-active');
+      childTicket.find('#number-ticket').removeClass('has-text-white');
+
+      if (_this.nbTicket > 0 ) {
+        _this.btnLess.removeClass('is-disabled');
+        _this.btnLess.addClass('is-active');
+        _this.eltNbTicket.parent().addClass('is-link-background');
+        _this.eltNbTicket.addClass('has-text-white');
+      }
+
+      if (_this.nbTicket > 5 ) {
+        _this.btnMore.removeClass('is-active');
+        _this.btnMore.addClass('is-disabled');
+      }
+
+      for (var i = 0; i < _this.nbTicket; i++) {
+        updateCard(_this.id, _this.nbTicket);
+      }
+
+      _this.eltNbTicket.text(_this.nbTicket);
+
+    }
+      
+    this.btnMore.click(function (e) {
+
+      e.preventDefault();
+
+      if (_this.nbTicket < _this.remainingTicket 
+         && _this.nbTicket < _this.options.nbMax 
+      ) {
+
+        _this.nbTicket ++;
+        $elementFormspaces.val(_this.nbTicket); 
+
+        if (_this.nbTicket > 0 ) {
+          _this.btnLess.removeClass('is-disabled');
+          _this.btnLess.addClass('is-active');
+          _this.eltNbTicket.parent().addClass('is-link-background');
+          _this.eltNbTicket.addClass('has-text-white');
+        }
+
+        if ( _this.nbTicket > _this.options.nbMax   - 1 
+          || _this.nbTicket > _this.remainingTicket - 1 
+        ) {
+          _this.btnMore.removeClass('is-active');
+          _this.btnMore.addClass('is-disabled');
+        }
+
+        _this.updateCalendar();
+        updateCard(_this.id, _this.nbTicket);
+        _this.eltNbTicket.text(_this.nbTicket);
+        
+      }
+
+    });
+
+    this.btnLess.click(function (e) {
+
+      e.preventDefault();
+
+      if ( _this.nbTicket > 0 ) {
+          
+        _this.nbTicket --;
+        $elementFormspaces.val(_this.nbTicket); 
+
+        if (_this.nbTicket == 0 ) {
+          _this.btnLess.removeClass('is-active');
+          _this.btnLess.addClass('is-disabled');
+          _this.eltNbTicket.parent().removeClass('is-link-background');
+          _this.eltNbTicket.removeClass('has-text-white');
+        }
+        if ( _this.nbTicket <= _this.options.nbMax - 1 
+           || _this.nbTicket <= _this.remainingTicket -1 
+        ) {
+          _this.btnMore.addClass('is-active');
+          _this.btnMore.removeClass('is-disabled');
+        }
+
+        _this.updateCalendar();
+        _this.eltNbTicket.text(_this.nbTicket);
+        updateCard(_this.id, _this.nbTicket);
+
+      }
+
+    });
+
+    function updateCard(id, nbTicket) {
+
+      var $ticketResume = $('#ticket-resume');
+      var $elementCible = $('#'+id+'-resume');
+      var $elementFormCible = $('#booking_stepOne_'+id);
+
+      var content = nbTicket + 'x ' + _this.eltTypeOfTicket.text();
+      if (nbTicket>1){
+        content += 's';
+      }
+      var moment = _this.options.moment;
+
+      var summaryContainer = createElement('div','columns is-gapless is-marginless',null,id);
+      var summaryContent = createElement('div','column is-two-thirds is-size-7', content);
+      var summaryPrice = createElement('div','column is-size-7',moment,'isHalf');
+
+      summaryContainer.appendChild(summaryContent);
+      summaryContainer.appendChild(summaryPrice);
+
+      $elementFormCible.val(nbTicket);       
+
+      updateTotal(nbTicket);
+
+      if(nbTicket > 0) {
+        if($elementCible.length > 0) {
+          $elementCible.replaceWith(summaryContainer);
+        } else {
+          $ticketResume.append(summaryContainer);
+        }    
+        _this.updateHalfDay()
+      } else {
+          $elementCible.remove();
+      }
+
+    }
+
+    function updateTotal(nbTicket) {             
+      constraintBottom()
+      var $eltTotalNumber = $('#number-total');     
+      $eltTotalNumber.text(nbTicket);
+    }
+
+    function createElement(type, classes, text, id) {
+      var element = document.createElement(type);
+      element.setAttribute('class', classes);
+      if(text){
+        element.textContent = text;
+      }
+      if(id){
+        element.setAttribute('id', id+'-resume');
+      }
+      return element;
+    }
+
+
+  }
+
+  updateHalfDay(){
+    var _this = this
+    var $ticketTarget = $('#isHalf')
+    var $cardTarget = $('#isHalf-resume');
+    var optionChecked = $('#booking_stepOne_isHalf option').filter(':selected').val()
+
+    updateMoment (optionChecked)
+
+    $.each(this.options.fields, function(index, field){
+      if(field == 'isHalf') {
+        let selector = $('#booking_stepOne_isHalf')
+        
+        selector.on('change', function(e) {
+          e.preventDefault()
+    
+          optionChecked = $('#booking_stepOne_isHalf option').filter(':selected').val()
+          updateMoment (optionChecked)
+
+        })
+      }
+
+    })
+
+    function updateMoment (optionChecked) {
+      if (optionChecked == 0) {
+        _this.options.moment = 'journée'
+      } else {
+        _this.options.moment = 'demi-journée'
+      }
+      $ticketTarget.text('À la ' + _this.options.moment )
+      if($cardTarget.length > 0 && $cardTarget.text() != _this.options.moment) {
+        $cardTarget.text(_this.options.moment)
+      }
+    }
+  } 
+
+  updateCalendar() {
+    var _this = this
+    var dateElts = document.querySelectorAll("[data-remaining]")
+    dateElts.forEach(function(element) {
+      var remaining = element.dataset.remaining
+      if (remaining < _this.nbTicket) {
+        element.setAttribute('disabled','disabled')
+      } else if (remaining > 0 && !element.hasAttribute('data-disabled')) {
+        element.removeAttribute('disabled')
+      }
+    });
+  }
+
+  setRemaining(remaining) {
+    this.remainingTicket = remaining 
+  }
+
+  remainingToDate(date) {
+
+    var _this = this
+  
+    var dateElts = document.querySelectorAll("[data-remaining]")
+
+    dateElts.forEach(function(element) {
+      var fulldate  = element.dataset.fulldate
+      var remaining = element.dataset.remaining
+      if (fulldate == date) {
+        _this.setRemaining(remaining)
+      }
+    });
+  }
+
+  static updateRemaining() {
+    var param =''
+    var dateElts = document.querySelectorAll("[data-remaining]")
+    dateElts.forEach(function(e,k) {
+      if (k == 0 || k == (dateElts.length-1) ) {
+        var fulldate = e.dataset.fulldate
+        var day = fulldate.split('/')
+        param += '/'
+        param += day[0]
+        if(k == (dateElts.length-1)){
+          param += '/'
+          param += day[1]   
+          param += '/'
+          param += day[2]   
+        }
+      }
+    })
+
+    $.ajax({
+      type: 'POST',
+      async:false,
+      url: 'remaining'+param,
+      success: function(data) {
+        var allRemaining = data.remaining
+        $.each(allRemaining,function(index,remaining){
+          var fulldate = $(`[data-fulldate='${index}']`)
+          fulldate.attr('data-remaining',remaining)
+          if (remaining == 0) {
+            fulldate.attr('disabled','disabled')
+          }
+        })
+      }
+    })
+  }
+
+  static create() {
+
+
+    
+    var $tickets = $('[data-ticket]')
+    var fields = ['isHalf']
+    
+    for (let ticket of $tickets) {
+      $(ticket).removeClass('is-hidden');
+      if ($(ticket).data('name') != 'enfant') {
+        $(ticket).removeClass('is-disabled')
+      }
+      var ticketLouvre = new Ticket( $(ticket), {
+        price: $(ticket).data('price'),
+        fields: fields,
+        parent: true
+      });
+    }
+    for (let field of fields) {
+      var fieldElt = $( '#field-' + field )
+      fieldElt.removeClass('is-hidden'); 
+    }
+    return ticketLouvre
+  }
+
+
+
+}
+
+function constraintBottom() {
+  // element lié a la taille de la card
+  var element = $('[data-sticky]')
+  var constraint = $('[data-container]')
+  var constraintBottom = (constraint.offset().top + constraint.height()) - (element.children('div').height() + 24 )/*hauteur menu + back + steps + padding-haut et bas*/
+
+  if ($(element).offset().top > constraintBottom ) {
+
+    element.removeClass('booking-fixed')
+    element.removeClass('booking-static')
+    element.addClass('booking-absolute')
+
+  } 
+}
+
+
+function setOriginalSelect ($select) {
+    if ($select.data("originalHTML") == undefined) {
+        $select.data("originalHTML", $select.html());
+    } // If it's already there, don't re-set it
+}
+
+function removeOptions ($select, $options) {
+    setOriginalSelect($select);
+    $options.remove();
+}
+
+function restoreOptions ($select) {
+    var ogHTML = $select.data("originalHTML");
+    if (ogHTML != undefined) {
+        $select.html(ogHTML);
+    }
+}
+class BookingTicket {
+
+  constructor(element, options) {
+
+    if (!options) options = {}
+
+    var defaultOptions = {
+      devise: '€',
+      decimal: ',00',
+    };
+
+    this.isHalf = document.querySelector('[data-ishalf]') ? true : false;
+
+    this.element = element
+    this.ticketId = this.element.dataset.ticket;
+    this.ticketName = this.element.dataset.ticketname;
+    this.ticketNameOfImage = this.element.dataset.ticketimage;
+    this.ticketPrice = this.element.dataset.ticketprice;
+
+    this.birthday_Day = this.element.querySelector('#booking_stepTwo_tickets_'+this.ticketId+'_birthday_day')
+    this.birthday_Month = this.element.querySelector('#booking_stepTwo_tickets_'+this.ticketId+'_birthday_month')
+    this.birthday_Year = this.element.querySelector('#booking_stepTwo_tickets_'+this.ticketId+'_birthday_year')
+
+    this.imageElt = this.element.querySelector('#ticket-image')
+    this.nameElt = this.element.querySelector('#ticket-name')
+    this.priceReduce = 10;
+    this.reduceElt = this.element.querySelector('#ticket-isReduce')
+    this.isReduce = this.reduceElt.querySelector('input[type=checkbox]').checked;
+
+    this.options = Object.assign({}, defaultOptions, options);
+
+    this.build()
+  }
+
+  build(){
+
+    var _this = this
+    var _selectorChekbox = this.reduceElt.querySelector('input[type=checkbox]')
+
+    this.birthday_Day.addEventListener('change', function (e) {
+      e.preventDefault();
+      _this.updateTicket()
+    }) 
+    this.birthday_Month.addEventListener('change', function (e) {
+      e.preventDefault();
+      _this.updateTicket()
+    }) 
+    this.birthday_Year.addEventListener('change', function (e) {
+      e.preventDefault();
+      _this.updateTicket()
+    }) 
+    _selectorChekbox.addEventListener('change', function (e) {
+      e.preventDefault();
+       if (_selectorChekbox.checked) {
+            _this.isReduce = true;
+            _this.updateTicket('nocheck')
+        } else {
+            _this.isReduce = false;
+            _this.updateTicket('check')
+            // do something else otherwise
+        }
+    }) 
+
+    _this.updateTicket()
+
+  }
+
+  updateTicket(checkboxChange = false) {
+    // Variables de date
+    var now = new Date();
+    var birthday = new Date(this.birthday_Year.value,this.birthday_Month.value-1,this.birthday_Day.value); 
+    var age = this.calculateAge(birthday)
+
+    if (!this.birthday_Year.value) {
+      return  
+    }
+
+    // Variables d'image
+    var path = this.imageElt.src
+
+    var ticketResume = document.getElementById('ticket-resume');
+
+    if (age < 12){    
+
+        if (checkboxChange == 'check') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        } else if(checkboxChange == 'nocheck') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume';
+        } else {
+          if (this.isReduce) {
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          } else {
+            var oldElement = '#ticket-' + this.ticketName + '-resume';
+          }
+        }
+
+        // Remplacement du nom
+        var newName = 'enfant'
+        var newPrice = 8
+        var _selectorChekbox = this.reduceElt.querySelector('input[type=checkbox]')
+        _selectorChekbox.checked = false
+        this.isReduce = false
+        if (this.isHalf) { newPrice /= 2}
+
+        this.nameElt.textContent = newName
+        var newPath = path.replace(this.ticketNameOfImage,'la-vierge-et-l-enfant.jpg')
+        this.ticketNameOfImage = 'la-vierge-et-l-enfant.jpg'
+        
+        // Remplacement de l'image
+        this.imageElt.src = newPath
+
+        // Masquage du bouton isReduce
+        this.reduceElt.classList.add("is-hidden") 
+
+        this.updateTicketSumary(newName,newPrice,oldElement,checkboxChange)
+
+    } else if(age >= 12 && age < 60){
+
+        if (checkboxChange == 'check') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        } else if(checkboxChange == 'nocheck') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume';
+        } else {
+          if (this.isReduce) {
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          } else {
+            var oldElement = '#ticket-' + this.ticketName + '-resume';
+          }
+        }
+
+
+        var newName = 'normal'
+        if (this.isReduce) {
+          var newPrice = 10
+        } else {
+          var newPrice = 16
+        }
+        if (this.isHalf) { newPrice /= 2}
+
+        // Remplacement du nom
+        this.nameElt.textContent = newName
+        
+        // Remplacement de l'image
+        var newPath = path.replace(this.ticketNameOfImage,'delacroix.jpg')
+        this.ticketNameOfImage = 'delacroix.jpg'
+        this.imageElt.src = newPath
+        
+        // Affichage du bouton isReduce
+        this.reduceElt.classList.remove("is-hidden")
+
+        this.updateTicketSumary(newName,newPrice,oldElement,checkboxChange)
+
+    } else if(age >= 60){
+
+        if (checkboxChange == 'check') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+        } else if(checkboxChange == 'nocheck') {
+          var oldElement = '#ticket-' + this.ticketName + '-resume';
+        } else {
+          if (this.isReduce) {
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          } else {
+            var oldElement = '#ticket-' + this.ticketName + '-resume';
+          }
+        }
+      
+        var newName = 'senior'  
+        if (this.isReduce) {
+          var newPrice = 10
+        } else {
+          var newPrice = 12
+        }   
+        if (this.isHalf) { newPrice /= 2}
+        
+
+        // Remplacement du nom
+        this.nameElt.textContent = newName
+
+        // Remplacement de l'image
+        var newPath = path.replace(this.ticketNameOfImage,'laitiere.jpg')
+        this.ticketNameOfImage = 'laitiere.jpg'
+        this.imageElt.src = newPath
+        
+        // Affichage du bouton isReduce
+        this.reduceElt.classList.remove("is-hidden")
+        this.updateTicketSumary(newName,newPrice,oldElement,checkboxChange)
+
+    }
+  
+  }
+
+  calculateAge(birthday) { // birthday is a date
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
+  updateTicketSumary(valueCibleName,valueCiblePrice,oldElement,checkboxChange) {
+
+    var ticketResume = document.getElementById('ticket-resume');
+    var elementSource = ticketResume.querySelector(oldElement);
+    var eltSourceName = elementSource.querySelector('#resume-nbr')
+    var eltSourcePrice = elementSource.querySelector('#price-subsubtotal')
+
+    var valueSourceNbTicket= elementSource.dataset.nombre
+    var valueSourceName = elementSource.dataset.name
+    var valueSourcePrice = elementSource.dataset.price
+
+    if (this.isReduce) {
+      var elementCible = ticketResume.querySelectorAll('#ticket-'+ valueCibleName +'-resume-reduce');
+    } else {   
+      var elementCible = ticketResume.querySelectorAll('#ticket-'+ valueCibleName +'-resume');
+    }
+
+
+    if ( (valueSourceName != valueCibleName)
+       ||(valueSourceName == valueCibleName && checkboxChange)
+    ) {
+
+      var valueNewSourceNbTicket = parseFloat(valueSourceNbTicket) - 1
+
+      if (valueNewSourceNbTicket == 0) {
+        elementSource.remove() 
+      } else {
+
+        elementSource.dataset.nombre = valueNewSourceNbTicket
+        eltSourceName.textContent = valueNewSourceNbTicket + 'x ' + valueSourceName[0].toUpperCase() + valueSourceName.substring(1)
+        if (!this.isReduce) {
+          eltSourceName.textContent += ' (tarif réduit)'  
+        }
+        eltSourcePrice.textContent = this.options.devise + (valueNewSourceNbTicket * valueSourcePrice) + this.options.decimal
+      
+      }
+      
+      if (elementCible.length > 0 ) {
+
+        elementCible = elementCible[0]
+        var eltCibleName = elementCible.querySelector('#resume-nbr')
+        var eltCiblePrice = elementCible.querySelector('#price-subsubtotal')
+        var valueCibleNbTicket= elementCible.dataset.nombre
+        var valueCibleName = elementCible.dataset.name
+        var valueCiblePrice = elementCible.dataset.price
+
+        var valueNewCibleNbTicket = parseFloat(valueCibleNbTicket) + 1 
+
+        elementCible.dataset.nombre = valueNewCibleNbTicket
+        eltCibleName.textContent = valueNewCibleNbTicket + 'x ' + valueCibleName[0].toUpperCase() + valueCibleName.substring(1)
+        if (this.isReduce) {
+          eltCibleName.textContent += ' (tarif réduit)'  
+        }
+        eltCiblePrice.textContent = this.options.devise + (valueNewCibleNbTicket * valueCiblePrice) + this.options.decimal
+      
+      } else {
+
+        var eltCiblePrice = this.options.devise + valueCiblePrice + this.options.decimal;
+        var eltCibleName = '1x ' + valueCibleName[0].toUpperCase() + valueCibleName.substring(1);
+        var id = 'ticket-' + valueCibleName + '-resume'
+
+        if(this.isReduce) {
+          eltCibleName += ' (tarif réduit)'
+          id += '-reduce'
+        } 
+
+        var summaryContainer = this.createElement('div','columns is-gapless is-marginless',null,id,valueCibleName,valueCiblePrice,1);
+        var summaryContent = this.createElement('div','column is-two-thirds is-size-7', eltCibleName, 'resume-nbr');
+        var summaryPrice = this.createElement('div','column is-size-7',eltCiblePrice,'price-subsubtotal');
+        
+        summaryContainer.appendChild(summaryContent);
+        summaryContainer.appendChild(summaryPrice);
+
+        ticketResume.appendChild(summaryContainer);
+        
+      }
+
+      this.ticketName = valueCibleName
+      this.updateTotal(ticketResume)
+    }
+
+  }
+
+  updateTotal(ticketResume) {  
+
+    var allRow = ticketResume.querySelectorAll('[data-name]')
+    var total = 0
+
+    allRow.forEach(function(row) {
+      var price = row.dataset.price
+      var number = row.dataset.nombre
+      total += price * number
+    })
+    
+    // constraintBottom()
+  
+    var eltSubTotalPrice = document.querySelector('#price-subtotal');
+    var eltTotalPrice = document.querySelector('#price-total');
+    var devise = this.options.devise; 
+    
+    eltSubTotalPrice.textContent = devise + total + this.options.decimal
+    eltTotalPrice.textContent    = devise + total + this.options.decimal
+  }
+
+  createElement(type, classes, text, id, name, price, number) {
+    var element = document.createElement(type);
+    element.setAttribute('class', classes);
+    if(text){
+      element.textContent = text;
+    }
+    if(id){
+      element.setAttribute('id', id);
+    }
+    if(name){
+      element.setAttribute('data-name', name);
+    }
+    if (price) {
+      element.setAttribute('data-price', price);
+    } 
+    if (number) {
+      element.setAttribute('data-nombre', number);
+    } 
+    return element;
+  }
+
+
+
+
+
+
+
+
+  static create(selector) {
+    var ticket = document.querySelectorAll(selector).forEach(element => new BookingTicket(element,{}))
+  }
+
+}
 var Stripe;
 if (Stripe !== undefined) {
   // Create a Stripe client
@@ -1130,6 +1883,7 @@ if (Stripe !== undefined) {
   card.addEventListener('change', function(event) {
     var displayError = document.getElementById('card-errors');
     if (event.error) {
+      displayError.classList.add('is-danger');
       displayError.textContent = event.error.message;
     } else {
       displayError.textContent = '';
@@ -1168,236 +1922,40 @@ if (Stripe !== undefined) {
     form.submit();
   }
 }
+jQuery(function($){
 
-var hasParent = 0;
-var hasChild = 0;
-var nbTicketEnfant = 0;
+  var createdAt = document.querySelector('[data-createdat]').dataset.createdat
+  var liveTime = 20;
+  var endTime = new Date(createdAt)
+  endTime.setMinutes(endTime.getMinutes() + liveTime)
+  var minutes = $('#timer_minutes')
+  var seconds = $('#timer_seconds')
 
+  setDate()
 
-class Ticket {
+  function setDate() {
+    var now = new Date()
+    var s = ((endTime.getTime() - now.getTime())/1000)
+    // UTC
+    // var s = ((endTime.getTime() - now.getTime())/1000) - now.getTimezoneOffset()*60
 
-  constructor(selector, options) {
+    var m = Math.floor(s/60) 
+    minutes.html(m)
+    s-= m * 60
 
-    if (!options) options = {};
-    var defaultOptions = {
-      nbMax: 6,
-      price : 16,
-      devise: '€',
-      decimal: ',00',
-      parent: false
-    };
+    s = Math.floor(s) 
+    seconds.html(s)
 
-    this.element = typeof selector === 'string' ? document.querySelector(selector) : selector;
-    // An invalid selector or non-DOM node has been provided.
-    if (!this.element) {
-      throw new Error('An invalid selector or non-DOM node has been provided.');
+    if( m < 0 ) {
+      var $inputMail = $('#booking_stepThree_userMail')
+      var $inputName = $('#booking_stepThree_userName')
+      $inputMail.val('timeelapsed@gmail.com')
+      $inputName.val('error time')
+      $( "#booking_stepThree" ).submit()
     }
-    this.id = this.element.attr('id')
-    this.eltNbTicket = this.element.find('#number-ticket');
-    this.parentNbTicket = this.eltNbTicket.parent();
-    this.eltTypeOfTicket = this.element.find('#typeOfTicket');
-    this.eltPrice = this.element.find('#price');
-    this.btnMore = this.element.find('.more');
-    this.btnLess = this.element.find('.less');
 
-    this.options = Object.assign({}, defaultOptions, options);
-  
-    this.build();
-  }
-
-  build() {
-    var _this = this;
-    var tmpNbTicket = 0;
-    var nbTicket = 0;
-    var isParent = _this.options.parent;
-    
-      
-      this.btnMore.click(function (e) {
-
-        e.preventDefault();
-        
-        if (isParent) { hasParent ++ };
-
-        if (isParent && hasParent === 1 ) {
-          var childTicket = $('#ticket-enfant');
-          childTicket.removeClass('is-disabled');
-          childTicket.find('.more').addClass('is-active');
-          childTicket.find('#number-ticket').removeClass('has-text-white');
-          childTicket.find('#number-ticket').text('0');
-          hasChild ++;
-          tmpNbTicket = 0
-          nbTicketEnfant = 0
-        }
-
-        console.log(hasChild)
-        console.log(hasChild)
-        if ((isParent || hasChild > 0) && nbTicket < _this.options.nbMax ) {
-
-
-          nbTicket ++;
-          
-          if (hasChild === 1 && !isParent) {
-            tmpNbTicket = 0
-            nbTicketEnfant ++;
-            nbTicket = nbTicketEnfant;   
-          } 
-
-          if (nbTicket > 0 ) {
-            _this.btnLess.removeClass('is-disabled');
-            _this.btnLess.addClass('is-active');
-            _this.eltNbTicket.parent().addClass('is-link-background');
-            _this.eltNbTicket.addClass('has-text-white');
-          }
-
-          if (nbTicket > 5 ) {
-            _this.btnMore.removeClass('is-active');
-            _this.btnMore.addClass('is-disabled');
-          }
-
-          updateTicketSumary(_this.id, nbTicket);
-          _this.eltNbTicket.text(nbTicket);
-          
-        }
-
-      });
-
-      this.btnLess.click(function (e) {
-
-        e.preventDefault();
-
-        if (isParent) { hasParent -- };
-        
-        if (isParent && hasParent === 0 ) {
-
-          hasChild = 0;
-          // nbTicketEnfant = 0;
-          var childTicket = $('#ticket-enfant');
-          var childNbTicket = childTicket.find('#number-ticket');
-
-          childTicket.addClass('is-disabled');
-
-          childTicket.find('.more').removeClass('is-active');
-          childTicket.find('.less').removeClass('is-active');
-          if (childNbTicket.text() > 0) {
-            childTicket.find('.number-ticket').removeClass('is-link-background');
-            childNbTicket.text('0');
-            console.log(enfant.price * nbTicketEnfant)
-            updateTicketSumary('ticket-enfant',0,{price:enfant.price * nbTicketEnfant});
-          }
-        }
-
-        if ((isParent || hasChild > 0) && nbTicket > 0 ) {
-            
-          nbTicket --;
-
-          if (hasChild === 1 && !isParent) {
-            nbTicketEnfant --;
-            nbTicket = nbTicketEnfant;   
-          } 
-
-          if (nbTicket == 0 ) {
-            _this.btnLess.removeClass('is-active');
-            _this.btnLess.addClass('is-disabled');
-            _this.eltNbTicket.parent().removeClass('is-link-background');
-            _this.eltNbTicket.removeClass('has-text-white');
-          }
-          if (nbTicket <= 5 ) {
-            _this.btnMore.addClass('is-active');
-            _this.btnMore.removeClass('is-disabled');
-          }
-          updateTicketSumary(_this.id, nbTicket);
-          _this.eltNbTicket.text(nbTicket);
-
-        }
-
-      });
-
-      function updateTicketSumary(id, nbTicket,options=false) {
-
-        var $ticketResume = $('#ticket-resume');
-        var $elementCible = $('#'+id+'-resume');
-        var $elementFormCible = $('#booking_stepOne_'+id);
-
-        var price = _this.options.price;
-        var content = nbTicket + 'x ' + _this.eltTypeOfTicket.text();
-        var total = _this.options.devise + (nbTicket * price) + _this.options.decimal;
-
-        var summaryContainer = createElement('div','columns is-gapless is-marginless',null,id);
-        var summaryContent = createElement('div','column is-two-thirds is-size-7', content);
-        var summaryPrice = createElement('div','column is-size-7',total);
-
-        summaryContainer.appendChild(summaryContent);
-        summaryContainer.appendChild(summaryPrice);
-
-        if (options && options.price) {
-          price = options.price
-        }
-
-        $elementFormCible.val(nbTicket);
-
-        updateTotal(price,nbTicket);
-
-        if(nbTicket > 0) {
-          if($elementCible.length > 0) {
-            $elementCible.replaceWith(summaryContainer);
-          } else {
-            $ticketResume.append(summaryContainer);
-          }    
-        } else {
-            $elementCible.remove();
-        }
-
-      }
-
-      function updateTotal(price,nbTicket) {   
-        
-        constraintBottom()
-      
-        var $eltSubTotalPrice = $('#price-subtotal');
-        var $eltTotalPrice = $('#price-total');
-        var devise = _this.options.devise;
-        var oldPrice = parseInt($eltSubTotalPrice.text().replace(devise,''));
-        
-        if (tmpNbTicket < nbTicket) {
-          var newPrice = oldPrice + price;
-          tmpNbTicket ++;
-        } else {
-          var newPrice = oldPrice - price;
-          tmpNbTicket --;
-        }
-
-        $eltSubTotalPrice.text(devise+newPrice+_this.options.decimal);
-        $eltTotalPrice.text(devise+newPrice+_this.options.decimal);
-
-      }
-
-      function createElement(type, classes, text, id) {
-        var element = document.createElement(type);
-        element.setAttribute('class', classes);
-        if(text){
-          element.textContent = text;
-        }
-        if(id){
-          element.setAttribute('id', id+'-resume');
-        }
-        return element;
-      }
+    setTimeout(setDate,1000);
 
   }
 
-}
-
-function constraintBottom() {
-  // element lié a la taille de la card
-  var element = $('[data-sticky]')
-  var constraint = $('[data-container]')
-  var constraintBottom = (constraint.offset().top + constraint.height()) - (element.children('div').height() + 24 )/*hauteur menu + back + steps + padding-haut et bas*/
-
-  if ($(element).offset().top > constraintBottom ) {
-
-    element.removeClass('booking-fixed')
-    element.removeClass('booking-static')
-    element.addClass('booking-absolute')
-
-  } 
-}
+})

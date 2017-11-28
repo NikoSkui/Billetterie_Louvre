@@ -325,7 +325,7 @@ class Booking
             $array[] = $ticket;
         }
 
-        $ticketsByType = array_filter($array, function($obj){
+        $ticketsByType = array_filter($array, function(BookingTicket $obj){
             static $nameList = [];
             $name = $obj->getTicket()->getName().$obj->getIsReduce();
             if(in_array($name,$nameList)) {
@@ -342,7 +342,7 @@ class Booking
      *
      * @return array
      */
-    public function getCount($typeOfTicket)
+    public function getCount(BookingTicket $typeOfTicket)
     {
         foreach ($this->tickets as $ticket) {
             $array[] = $ticket;
@@ -363,7 +363,7 @@ class Booking
      *
      * @return array
      */
-    public function getTicketsPriceByType($typeOfTicket)
+    public function getTicketsPriceByType(BookingTicket $typeOfTicket)
     {
         $NumberOfTicket = $this->getCount($typeOfTicket);
         return $NumberOfTicket * $typeOfTicket->getPrice();     

@@ -48,10 +48,6 @@ class UpPricesBookingService
         }
       }
 
-      // var_dump($reduce->getPrice());die();
-      // On SET le prix des tickets du booking
-      // $bookingTicket->setPrice($bookingTicket->getTicket()->getPrice());
-
       // On vérifie si le prix du ticket est inférieur au tarif 
       // --> Si Oui on SET le prix des tickets du booking 
       if ($bookingTicket->getPrice() < $reduce->getPrice()) {

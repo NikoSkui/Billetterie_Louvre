@@ -68,7 +68,6 @@ class DefaultController extends Controller
             $booking = $form->getData();
 
             for ($i=0; $i < $booking->getSpaces() ; $i++) { 
-                // $ticket = $repTicket->findOneByName('normal');
                 $bookingTicket = new BookingTicket();
                 $bookingTicket->setTicket($ticket);
                 $bookingTicket->setBooking($booking);
@@ -239,7 +238,6 @@ class DefaultController extends Controller
 
         // On récupère l'objet booking enregistré en session puis on supprime la session
         $booking = $request->getSession()->get('booking');
-        // $request->getSession()->remove('booking');
 
         // Si l'objet booking enregistré en session a un ID
         // -->On récupère l'objet booking de la BDD correspondant

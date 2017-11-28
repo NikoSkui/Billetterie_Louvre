@@ -66,21 +66,6 @@ class StripeService
   //   -d plan=sapphire-staff-008
  
 
-
-      // try {
-          
-      //     $charge = \Stripe\Charge::create(array(
-      //         "amount" => $booking->getPrice() * 100, // Amount in cents
-      //         "currency" => "eur",
-      //         "source" => $token,
-      //         "description" => "Paiement My Ticket - Musée du Louvre"
-      //     ));  
-
-
-      // } catch(\Stripe\Error\Card $e) {
-      //     $this->addFlash("error","Snif ça marche pas :(");
-      //     return $this->redirectToRoute('ns_checkout_confirmation');     
-      // }
   }
 
 }

@@ -31,9 +31,5 @@ class NSCheckoutExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
-        // Second Approach -> with service
-        // $configServiceDefinition = $container->getDefinition('ns_checkout.services.config_checkout');
-        // $configServiceDefinition->addMethodCall('setConfig', [$config['booking']]);
     }
 }

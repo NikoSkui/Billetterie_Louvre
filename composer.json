@@ -1,5 +1,6 @@
 {
-    "name": "niko/_projet",
+    "name": "niko/billeterie_louvre",
+    "description": "Projet d'étude ayant pour objectif de réaliser une billeterie pour le musée du Louvre avec Symfony 3 et l'API Stripe",
     "license": "proprietary",
     "type": "project",
     "autoload": {

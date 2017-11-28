@@ -37,3 +37,11 @@
   </div>
 
 {% endblock %}
+
+{% block javascript %}
+  {% javascripts 
+    'bundles/nscheckout/js/common/main.js'
+  %}
+      <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+{% endblock %}

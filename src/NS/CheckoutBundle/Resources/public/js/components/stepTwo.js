@@ -82,17 +82,6 @@ class BookingTicket {
 
     if (age < 12){    
 
-        // if(this.isReduce) {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-        //   if(this.ticketName == 'enfant') {
-        //     var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //   }
-        // } else {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //   if(this.ticketName == 'enfant') {
-        //     var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-        //   }
-        // }
         if (checkboxChange == 'check') {
           var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
         } else if(checkboxChange == 'nocheck') {
@@ -127,24 +116,6 @@ class BookingTicket {
 
     } else if(age >= 12 && age < 60){
 
-        // if(this.isReduce) {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-        //   if(this.ticketName == 'normal') {
-        //     var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //   }
-        // } else {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //   if(this.ticketName == 'normal') {
-        //     if (checkboxChange) {
-        //       var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-        //     } else {
-        //       var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //     }
-        //   }
-        // }
-        // if(this.ticketName == 'enfant') {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
-        // }
         if (checkboxChange == 'check') {
           var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
         } else if(checkboxChange == 'nocheck') {
@@ -181,24 +152,6 @@ class BookingTicket {
 
     } else if(age >= 60){
 
-        // if(this.isReduce) {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-        //   if(this.ticketName == 'senior') {
-        //     var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //   }
-        // } else {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //   if(this.ticketName == 'senior') {
-        //     if (checkboxChange) {
-        //       var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
-        //     } else {
-        //       var oldElement = '#ticket-' + this.ticketName + '-resume';
-        //     }
-        //   }
-        // }
-        // if(this.ticketName == 'enfant') {
-        //   var oldElement = '#ticket-' + this.ticketName + '-resume';
-        // }
         if (checkboxChange == 'check') {
           var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
         } else if(checkboxChange == 'nocheck') {

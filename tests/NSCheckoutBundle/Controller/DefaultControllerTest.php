@@ -20,6 +20,7 @@ class DefaultControllerTest extends WebTestCase
     private $container;
     private $em;
     private $session;
+    private $ticketNeutre;
 
     protected function setUp()
     {
@@ -34,50 +35,73 @@ class DefaultControllerTest extends WebTestCase
         // on récupère la session et on effectue des get ou set si besoin
         $this->session = $this->client->getContainer()->get('session');
 
-        // Simuler enregistrement dans BDD
-        // $this->em->getConnection()->beginTransaction();
-        // $this->em->getConnection()->setAutoCommit(false);
-
         // Nettoyer la BDD TEST
-        static $metadatas;
+        // static $metadatas;
 
-        if (!isset($metadatas)) {
-            $metadatas = $this->em->getMetadataFactory()->getAllMetadata();
-        }
+        // if (!isset($metadatas)) {
+        //     $metadatas = $this->em->getMetadataFactory()->getAllMetadata();
+        // }
 
-        $schemaTool = new SchemaTool($this->em);
-        $schemaTool->dropDatabase();
+        // $schemaTool = new SchemaTool($this->em);
+        // $schemaTool->dropDatabase();
 
-        if (!empty($metadatas)) {
-            $schemaTool->createSchema($metadatas);
-        }
+        // if (!empty($metadatas)) {
+        //     $schemaTool->createSchema($metadatas);
+        // }
 
-        $ticket2 = new Ticket();
-        $ticket2->setName('billet') 
+        $this->ticket = new Ticket();
+        $this->ticket->setName('billet') 
+                            ->setDescription("Les billets sont nominatifs, à l'étape suivante n’oubliez pas d’indiquer le nom, prénom et date de naissance des visiteurs") 
+                            ->setPrice(0)
+                            ->setImage('joconde.jpg')
+                            ->setMin(0)
+                            ->setMax(0);
+
+        $normal = new Ticket();
+        $normal->setName('normal') 
                 ->setDescription("'+12 ans -60 ans'") 
                 ->setPrice(16)
                 ->setImage('delacroix.jpg')
                 ->setMin(12)
                 ->setMax(60);
 
-        $this->em->persist($ticket2);
+        $senior = new Ticket();
+        $senior->setName('senior') 
+                ->setDescription("'+12 ans -60 ans'") 
+                ->setPrice(12)
+                ->setImage('delacroix.jpg')
+                ->setMin(60)
+                ->setMax(120);
+
+        $enfant = new Ticket();
+        $enfant->setName('enfant') 
+                ->setDescription("'+12 ans -60 ans'") 
+                ->setPrice(8)
+                ->setImage('delacroix.jpg')
+                ->setMin(4)
+                ->setMax(12);
+
+        $ticket4 = new Ticket();
+        $ticket4->setName('réduit') 
+                ->setDescription('réduit') 
+                ->setPrice(10)
+                ->setImage('joconde.jpg')
+                ->setMin(0)
+                ->setMax(0);
+
+        $this->em->persist($normal);
+        $this->em->persist($senior);
+        $this->em->persist($enfant);
+        $this->em->persist($ticket4);
+        $this->em->persist($this->ticket);
         $this->em->flush();
     }
 
     public function testStepOne()
     {
-        $ticket1 = new Ticket();
-        $ticket1->setName('billet') 
-                ->setDescription("Les billets sont nominatifs, à l'étape suivante n’oubliez pas d’indiquer le nom, prénom et date de naissance des visiteurs") 
-                ->setPrice(0)
-                ->setImage('joconde.jpg')
-                ->setMin(0)
-                ->setMax(0);
-        $this->em->persist($ticket1);
-        $this->em->flush();
-
+        
         $this->session->set('step','1');
-        $this->client->request('GET', '/checkout/');
+        $crawler = $this->client->request('GET', '/checkout/');
 
         $response = $this->client->getResponse();
         $responseContent = $response->getContent();
@@ -85,27 +109,40 @@ class DefaultControllerTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains('step-1', $responseContent);
 
-        return $ticket1;
+        // Sélection basée sur la valeur, l'id ou le nom des boutons
+        $form = $crawler->selectButton('stepButton')->form([
+            'booking_stepOne[date]' => '29/11/2017',
+            'booking_stepOne[spaces]' => '1',
+        ]);
+
+        $this->client->submit($form);
+
+        $booking = new Booking();
+        $booking->setDate('29/11/2017')
+                ->setSpaces(1)
+                ->setIsHalf(false);
+        $bookingTicket = new BookingTicket();
+        $bookingTicket->setTicket($this->ticket)
+                      ->setBooking($booking);
+        $booking->addTicket($bookingTicket);
+
+        $response = $this->client->getResponse();
+        $responseContent = $response->getContent();
+
+        $this->assertContains('step-2', $responseContent);
+
+        return $booking;
 
     }
 
     /**
      * @depends testStepOne
      */
-    public function testStepTwo($ticket)
+    public function testStepTwo($booking)
     {
-        $booking = new Booking();
-        $booking->setDate('20/11/2017')
-                ->setSpaces(1)
-                ->setIsHalf(false);
-        $bookingTicket = new BookingTicket();
-        $bookingTicket->setTicket($ticket)
-                      ->setBooking($booking);
-        $booking->addTicket($bookingTicket);
-
-        $this->session->set('booking',$booking);
 
         $this->session->set('step','2');
+        $this->session->set('booking',$booking);
         $crawler = $this->client->request('GET', '/checkout/');
 
         $response = $this->client->getResponse();
@@ -115,73 +152,50 @@ class DefaultControllerTest extends WebTestCase
         $this->assertContains('step-2', $responseContent);
 
         // Sélection basée sur la valeur, l'id ou le nom des boutons
-        $form = $crawler->selectButton('stepButton')->form();
-        $form['booking_stepTwo[tickets][0][userName]'] = 'Toto Tata';
-        $form['booking_stepTwo[tickets][0][country]'] = 'FR';
-        $form['booking_stepTwo[tickets][0][birthday][day]'] = '1';
-        $form['booking_stepTwo[tickets][0][birthday][month]'] = '1';
-        $form['booking_stepTwo[tickets][0][birthday][year]'] = '1985';
-        $form['booking_stepTwo[tickets][0][isReduce]'] = false;
+        $form = $crawler->selectButton('stepButton')->form([
+            'booking_stepTwo[tickets][0][userName]'        => 'Toto Tata',
+            'booking_stepTwo[tickets][0][country]'         => 'FR',
+            'booking_stepTwo[tickets][0][birthday][day]'   => '1',
+            'booking_stepTwo[tickets][0][birthday][month]' => '1',
+            'booking_stepTwo[tickets][0][birthday][year]'  => '1985',
+            'booking_stepTwo[tickets][0][isReduce]'        => false,
+        ]);
 
-        $crawler = $this->client->submit($form);
+        $this->client->submit($form);
+
+        $repTicket = $this->em->getRepository('NSCheckoutBundle:Ticket');
+        $ticket = $repTicket->findOneByName('normal');
+        $bookingTickets = $booking->getTickets();
+        foreach ($bookingTickets as $bookingTicket) {
+            $bookingTicket->setUserName('Toto tata')
+                          ->setCountry('FR')
+                          ->setBirthday(new \DateTime('01/01/1985'))
+                          ->setIsReduce(false)
+                          ->setPrice(16)
+                          ->setTicket($ticket);
+        }
+        $booking->setPrice(16);
+
+        $this->em->persist($booking);
+        $this->em->flush();
+
+        $response = $this->client->getResponse();
+        $responseContent = $response->getContent();
+
+        $this->assertContains('step-3', $responseContent);
         
         return $booking;
 
     }
-    /** 
-     * @depends testStepTwo
-     */
-    // public function testStepTwoSubmitValidData($booking)
-    // {
-    //     $this->session->set('step','2');
-    //     $this->client->request('GET', '/checkout/');
-    //     $formData = array(
-    //         'username' => 'Toto tata',
-    //         'country'  => 'France',
-    //         'birthday' => '01/01/1985',
-    //         'isReduce' => false
-    //     );
-    //     $formData = array(
-    //         'test' => 'test',
-    //         'test2' => 'test2',
-    //     );
-
-    //     $form = $this->factory->create(TestedType::class);
-
-    //     $object = TestObject::fromArray($formData);
-
-    //     // submit the data to the form directly
-    //     $form->submit($formData);
-
-    //     $this->assertTrue($form->isSynchronized());
-    //     $this->assertEquals($object, $form->getData());
-
-    //     $view = $form->createView();
-    //     $children = $view->children;
-
-    //     foreach (array_keys($formData) as $key) {
-    //         $this->assertArrayHasKey($key, $children);
-    //     }
-
-    // }
 
     /**
      * @depends testStepTwo
      */
     public function testStepThree($booking)
     {
-        $tickets = $booking->getTickets();
-        foreach ($tickets as $bookingTicket) {
-            $bookingTicket->setUserName('Toto tata')
-                          ->setCountry('France')
-                          ->setBirthday('01/01/1985')
-                          ->setIsReduce(false);
-        }
-
         $this->session->set('booking',$booking);
-
         $this->session->set('step','3');
-        $this->client->request('GET', '/checkout/');
+        $crawler = $this->client->request('GET', '/checkout/');
 
         $response = $this->client->getResponse();
         $responseContent = $response->getContent();
@@ -189,13 +203,42 @@ class DefaultControllerTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains('step-3', $responseContent);
 
+        // Sélection basée sur la valeur, l'id ou le nom des boutons
+        $form = $crawler->selectButton('stepButton')->form([
+            'booking_stepThree[userMail]'        => 'toto@gmail.fr',
+            'booking_stepThree[userName]'         => 'toto tata',
+        ]);
+
+        $this->client->submit($form);
+
+        $response = $this->client->getResponse();
+        $responseContent = $response->getContent();
+
+        $this->assertContains('step-3', $responseContent);
+
+        return $booking;
+
+    }
+
+    /**
+     * @depends testStepThree
+     */
+    public function testStepFor($booking)
+    {
+        $this->session->set('booking',$booking);
+        $this->session->set('step','completed');
+        $crawler = $this->client->request('GET', '/checkout/');
+
+        $response = $this->client->getResponse();
+        $responseContent = $response->getContent();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains('step-4', $responseContent);
     }
 
     protected function tearDown()
     {
         parent::tearDown();
-
-        // $this->em->getConnection()->rollBack();
         $this->em->close();
         $this->em = null;
 

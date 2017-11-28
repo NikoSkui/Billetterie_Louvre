@@ -172,14 +172,17 @@ class DefaultController extends Controller
             $booking = $form->getData();
 
             $liveTime = $this->container->get('ns_checkout.services.live_time')
-                                        ->validate($booking,30);
+                                        ->validate($booking,20);
             if($liveTime != "true") return  $liveTime;           
 
             // On récupère le service stripe
             $stripe = $this->container->get('ns_checkout.services.stripe');
 
             // On vérifie si l'email exist déjà
-            $hasMail = $repBooking->findOneByUserMail($booking->getUserMail());
+            $hasMail = $repBooking->findOneBy([
+                'userMail' => $booking->getUserMail(),
+                'status'    => 1,
+            ]);
 
             if (!$hasMail) {
 
@@ -228,6 +231,7 @@ class DefaultController extends Controller
     public function stepForAction(Request $request)
     {
         $step = 4;
+        $request->getSession()->set('step','4');
         
          // On récupère l'entité manager et les repositories
         $em = $this->getDoctrine()->getManager();
@@ -237,14 +241,14 @@ class DefaultController extends Controller
         $booking = $request->getSession()->get('booking');
         $request->getSession()->remove('booking');
 
-        if($request->getSession()->get('step') == 'completed'){
-            return $this->forward('NSCheckoutBundle:Default:exit');   
-        }
-
         // Si l'objet booking enregistré en session a un ID
         // -->On récupère l'objet booking de la BDD correspondant
-        if ($booking && $booking->getId()) {
+        if ($booking->getId()) {
             $booking = $repBooking->find($booking);
+        }
+
+        if($request->getSession()->get('step') == 'completed'){
+            return $this->forward('NSCheckoutBundle:Default:exit');   
         }
 
         $request->getSession()->set('step','completed');

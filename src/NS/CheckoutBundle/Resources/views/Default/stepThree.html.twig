@@ -12,7 +12,7 @@
     </p>
   </div>
   <div class="tile is-child" style="flex-grow:0;">
-    <p class="subtitle is-5">Temps restant pour effectuer votre paiement : <span class="timer">20m 0s</span></p>  
+    <p class="subtitle is-5" data-createdat="{{ booking.createdAt|date('Y/m/j H:m:s') }}">Temps restant pour effectuer votre paiement : <span id="timer_minutes">20</span>m <span id="timer_seconds">0</span>s</p>  
   </div>
 
 
@@ -58,7 +58,16 @@
     </div>
   </div>
 
+
  <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
 
-
+{% block javascript %}
+  {% javascripts 
+    'bundles/nscheckout/js/common/main.js'  
+    'bundles/nscheckout/js/components/stripe.js'
+    'bundles/nscheckout/js/components/timer.js'
+  %}
+      <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
 {% endblock %}

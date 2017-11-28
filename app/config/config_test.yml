@@ -1,8 +1,8 @@
 imports:
     - { resource: config_dev.yml }
 
-# parameters:
-#     database_name: OCR_P4_P_test
+parameters:
+    database_name: OCR_P4_P_test
 
 framework:
     test: ~

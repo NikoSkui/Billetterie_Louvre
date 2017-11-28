@@ -17,3 +17,4 @@ ns_checkout_ajax_remaining:
         dayend: \d{1,2}
         month:   \d{1,2}
         year:  \d{4}
+        

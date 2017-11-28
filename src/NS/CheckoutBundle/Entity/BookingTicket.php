@@ -105,23 +105,6 @@ class BookingTicket
      */
     private $ticket;
 
-
-    // /**
-    // * @ORM\PrePersist
-    // */
-    // public function increase()
-    // {
-    //     $this->getBooking()->increaseSpaces();
-    // }
-
-    // /**
-    // * @ORM\PreRemove
-    // */
-    // public function decrease()
-    // {
-    //     $this->getBooking()->decreaseSpaces();
-    // }
-
     /**
      * Get id
      *

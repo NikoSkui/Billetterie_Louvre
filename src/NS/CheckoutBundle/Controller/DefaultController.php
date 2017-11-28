@@ -67,7 +67,9 @@ class DefaultController extends Controller
             // On récupère les données du formulaire
             $booking = $form->getData();
 
-            for ($i=0; $i < $booking->getSpaces() ; $i++) { 
+            $length = $booking->getSpaces();
+
+            for ($i = 0; $i < $length; $i++) { 
                 $bookingTicket = new BookingTicket();
                 $bookingTicket->setTicket($ticket);
                 $bookingTicket->setBooking($booking);
@@ -197,7 +199,7 @@ class DefaultController extends Controller
                 ]);
             }
 
-            $charge = $stripe->api('charges',[
+            $stripe->api('charges',[
                 "amount"   => $booking->getPrice() * 100,
                 "currency" => 'eur',
                 "customer" => $customer->id

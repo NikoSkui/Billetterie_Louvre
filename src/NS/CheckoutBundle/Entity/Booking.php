@@ -350,7 +350,7 @@ class Booking
 
         $typeOfTicket = $typeOfTicket->getTicket()->getName().$typeOfTicket->getIsReduce();
 
-        $countTicketsByType = array_count_values(array_map(function ($ticket) {
+        $countTicketsByType = array_count_values(array_map(function (BookingTicket $ticket) {
             return $ticket->getTicket()->getName().$ticket->getIsReduce();
         }, $array));
 

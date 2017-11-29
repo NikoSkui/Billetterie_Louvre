@@ -232,7 +232,6 @@ class DefaultController extends Controller
     public function stepForAction(Request $request)
     {
         $step = 4;
-        $request->getSession()->set('step','4');
         
          // On récupère l'entité manager et les repositories
         $em = $this->getDoctrine()->getManager();

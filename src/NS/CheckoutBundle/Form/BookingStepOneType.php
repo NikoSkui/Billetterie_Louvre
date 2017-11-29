@@ -21,7 +21,7 @@ class BookingStepOneType extends AbstractType
         $builder
             ->add('date', HiddenType::class)
             ->add('spaces', HiddenType::class)
-            ->add('isHalf', ChoiceType::class,[
+            ->add('half', ChoiceType::class,[
                 'choices' => [
                     'Visite pour la journée' => false,
                     'Visite pour la demi-journée' => true

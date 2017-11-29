@@ -66,7 +66,7 @@ class BookingTicket
      * @ORM\Column(name="is_reduce", type="boolean")
      * @Assert\Type(type="bool")
      */
-    private $isReduce;
+    private $reduce;
 
     /**
      * @var string
@@ -245,27 +245,27 @@ class BookingTicket
     }
 
     /**
-     * Set isReduce
+     * Set reduce
      *
-     * @param boolean $isReduce
+     * @param boolean $reduce
      *
      * @return BookingTicket
      */
-    public function setIsReduce($isReduce)
+    public function setReduce($reduce)
     {
-        $this->isReduce = $isReduce;
+        $this->reduce = $reduce;
 
         return $this;
     }
 
     /**
-     * Get isReduce
+     * Get reduce
      *
      * @return boolean
      */
-    public function getIsReduce()
+    public function isReduce()
     {
-        return $this->isReduce;
+        return $this->reduce;
     }
 
     /**

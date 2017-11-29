@@ -45,7 +45,7 @@ class Booking
      *      message="La valeur {{ value }} n'est pas un valide {{ type }}"
      * )
      */
-    private $isHalf;
+    private $half;
 
     /**
      * @var int
@@ -257,27 +257,27 @@ class Booking
     }
 
     /**
-     * Set isHalf
+     * Set half
      *
-     * @param boolean $isHalf
+     * @param boolean $half
      *
      * @return Booking
      */
-    public function setIsHalf($isHalf)
+    public function setHalf($half)
     {
-        $this->isHalf = $isHalf;
+        $this->half = $half;
 
         return $this;
     }
 
     /**
-     * Get isHalf
+     * Get half
      *
      * @return boolean
      */
-    public function getIsHalf()
+    public function isHalf()
     {
-        return $this->isHalf;
+        return $this->half;
     }
 
     /**
@@ -327,7 +327,7 @@ class Booking
 
         $ticketsByType = array_filter($array, function(BookingTicket $obj){
             static $nameList = [];
-            $name = $obj->getTicket()->getName().$obj->getIsReduce();
+            $name = $obj->getTicket()->getName().$obj->isReduce();
             if(in_array($name,$nameList)) {
                 return false;
             }
@@ -348,10 +348,10 @@ class Booking
             $array[] = $ticket;
         }
 
-        $typeOfTicket = $typeOfTicket->getTicket()->getName().$typeOfTicket->getIsReduce();
+        $typeOfTicket = $typeOfTicket->getTicket()->getName().$typeOfTicket->isReduce();
 
         $countTicketsByType = array_count_values(array_map(function (BookingTicket $ticket) {
-            return $ticket->getTicket()->getName().$ticket->getIsReduce();
+            return $ticket->getTicket()->getName().$ticket->isReduce();
         }, $array));
 
         return $countTicketsByType[$typeOfTicket];

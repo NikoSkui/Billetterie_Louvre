@@ -142,7 +142,7 @@ class Ticket {
 
       var summaryContainer = createElement('div','columns is-gapless is-marginless',null,id);
       var summaryContent = createElement('div','column is-two-thirds is-size-7', content);
-      var summaryPrice = createElement('div','column is-size-7',moment,'isHalf');
+      var summaryPrice = createElement('div','column is-size-7',moment,'half');
 
       summaryContainer.appendChild(summaryContent);
       summaryContainer.appendChild(summaryPrice);
@@ -187,20 +187,20 @@ class Ticket {
 
   updateHalfDay(){
     var _this = this
-    var $ticketTarget = $('#isHalf')
-    var $cardTarget = $('#isHalf-resume');
-    var optionChecked = $('#booking_stepOne_isHalf option').filter(':selected').val()
+    var $ticketTarget = $('#half')
+    var $cardTarget = $('#half-resume');
+    var optionChecked = $('#booking_stepOne_half option').filter(':selected').val()
 
     updateMoment (optionChecked)
 
     $.each(this.options.fields, function(index, field){
-      if(field == 'isHalf') {
-        let selector = $('#booking_stepOne_isHalf')
+      if(field == 'half') {
+        let selector = $('#booking_stepOne_half')
         
         selector.on('change', function(e) {
           e.preventDefault()
     
-          optionChecked = $('#booking_stepOne_isHalf option').filter(':selected').val()
+          optionChecked = $('#booking_stepOne_half option').filter(':selected').val()
           updateMoment (optionChecked)
 
         })
@@ -293,7 +293,7 @@ class Ticket {
 
     
     var $tickets = $('[data-ticket]')
-    var fields = ['isHalf']
+    var fields = ['half']
     
     for (let ticket of $tickets) {
       $(ticket).removeClass('is-hidden');

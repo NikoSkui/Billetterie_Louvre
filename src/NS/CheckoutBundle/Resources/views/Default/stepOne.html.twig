@@ -34,11 +34,11 @@
 
   {% include "NSCheckoutBundle:Components:ticket.html.twig" %}        
 
-  <div id="field-isHalf" class="tile is-child is-hidden" style="padding-bottom:0;flex-grow:0;">
+  <div id="field-half" class="tile is-child is-hidden" style="padding-bottom:0;flex-grow:0;">
     <label class="halfDay">Pour combien de temps ? </label>
     <div class="control">
       <div class="select is-fullwidth  is-medium select-halfDay ">
-        {{ form_widget(form.isHalf, {'attr': {'class': 'halfDay'}} ) }}
+        {{ form_widget(form.half, {'attr': {'class': 'halfDay'}} ) }}
       </div>
     </div>
   </div>

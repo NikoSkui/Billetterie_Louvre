@@ -79,7 +79,7 @@
             <div id="ticket-isReduce" class="column is-half is-offset-half {% if booking.tickets[k].ticket.name == 'enfant' %} is-hidden {% endif%}" style="display:flex;justify-content:flex-end;">
               <label class="checkbox has-text-right">
                 Tarif réduit
-                {{ form_widget(ticket.isReduce) }}
+                {{ form_widget(ticket.reduce) }}
               </label>
             </div>
           </div>

@@ -53,18 +53,18 @@ class UpPricesBookingService
       // On vérifie si le prix du ticket est inférieur au tarif 
       // --> Si Oui on SET le prix des tickets du booking 
       if ($bookingTicket->getPrice() < $reduce->getPrice()) {
-        $bookingTicket->setIsReduce(false);
+        $bookingTicket->setReduce(false);
       }
 
       // On vérifie si les tickets du booking sont réduit
       // --> Si Oui on SET le prix des tickets du booking  
-      if ($bookingTicket->getIsReduce()) {
+      if ($bookingTicket->isReduce()) {
         $bookingTicket->setPrice($reduce->getPrice());
       }
 
       // On vérifie si le booking est à la demi-journée 
       // --> Si Oui on SET le prix des tickets du booking     
-      if ($booking->getIsHalf()) {
+      if ($booking->isHalf()) {
         $bookingTicket->setPrice($bookingTicket->getPrice()/2);
       }
 

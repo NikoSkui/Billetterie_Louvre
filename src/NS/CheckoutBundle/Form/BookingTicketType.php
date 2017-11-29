@@ -32,7 +32,7 @@ class BookingTicketType extends AbstractType
                     'day'   => '--',
                 ],
             ])
-            ->add('isReduce',CheckboxType::class, [
+            ->add('reduce',CheckboxType::class, [
                 'required' => false,
             ]);
     }

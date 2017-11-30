@@ -45,7 +45,7 @@
         element.addClass('booking-static')
 
       }
-    });
+    })
     /*Fonctions rezise*/
     $(window).resize(function(e){
       element.removeClass('booking-fixed')

@@ -24,3 +24,8 @@ monolog:
 ns_checkout:
     booking:
         max_tickets_by_day: 1000
+
+swiftmailer:
+    transport: gmail
+    username: '%mailer_user%'
+    password: '%mailer_password%'

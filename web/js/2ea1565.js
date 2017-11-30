@@ -21,64 +21,67 @@ document.addEventListener( 'DOMContentLoaded', function () {
         var now = new Date()
         var today = now.getFullYear()+ '/' + (now.getMonth()+1) + '/' + now.getDate() 
         var daySelect = e.getFullYear()+ '/' + (e.getMonth()+1) + '/' + e.getDate() 
-        var $selector = $('#booking_stepOne_isHalf')
+        var $selector = $('#booking_stepOne_half')
         var $spacesVal = $('#number-ticket').text()
         var $remainingElt = $("[data-fulldate='"+e.getDate()+ '/' + (e.getMonth()+1) + '/' + e.getFullYear() +"']")
         var $remainingVal = $remainingElt.attr('data-remaining')
         var btnMore = $('#ticket-billet .more')
 
         if ($remainingVal == $spacesVal ) {
-          btnMore.removeClass('is-active');
-          btnMore.addClass('is-disabled');
+          btnMore.removeClass('is-active')
+          btnMore.addClass('is-disabled')
         } else {
-          btnMore.addClass('is-active');
-          btnMore.removeClass('is-disabled');       
+          btnMore.addClass('is-active')
+          btnMore.removeClass('is-disabled')       
         }
         
+        console.log(now.getHours())
         if (now.getHours() >= 14
             && today == daySelect   
         ) {
-          var $optionsToRemove = $selector.find('option[value="0"]');
-          removeOptions($selector, $optionsToRemove);   
+          var $optionsToRemove = $selector.find('option[value="0"]')
+          removeOptions($selector, $optionsToRemove)   
         } else {
-          restoreOptions($selector);
+          restoreOptions($selector)
         }
       }
 
-    });
-    var $selectedDate = $('#ticketDate').text();
+    })
+    var $selectedDate = $('#ticketDate').text()
     var dateTicket = new Date($selectedDate)
 
     if (dateTicket != 'Invalid Date') {
-      addTicket();
+      addTicket()
     }
 
   }
 
   if ($('.checkout-steps__item--accessible')) {
     $('.checkout-steps__item--accessible').click(function(e){
-          e.preventDefault();
-          history.back();
-    });
+          e.preventDefault()
+          history.back()
+    })
   }
 
-});
+})
 document.addEventListener( 'DOMContentLoaded', function () {
   if ($("[data-booking]")) {
     var booking = new Booking()
   }  
-});
+})
+
 class Booking {
     constructor(selector, options) 
     {
-      this.date;
-      this.isHalf;
+      this.date
+      this.isHalf
       this.spaces
-      this.tickets = BookingTicket.create('[data-ticket]');
+      this.tickets = BookingTicket.create('[data-ticket]')
     }
 
 }
-var now = null;
+
+var now = null
 var datepicker_langs = {
   en: {
     weekStart: 1,
@@ -131,307 +134,307 @@ class MyDatePicker {
       onOpen: null,
       onClose: null,
       onRender: null
-    };
-
-    this.element = typeof selector === 'string' ? document.querySelector(selector) : selector;
-    // An invalid selector or non-DOM node has been provided.
-    if (!this.element) {
-      throw new Error('An invalid selector or non-DOM node has been provided.');
     }
 
-    this.parent = this.element.parentElement;
-    this.lang = typeof datepicker_langs[this.lang] !== 'undefined' ? this.lang : 'en';
+    this.element = typeof selector === 'string' ? document.querySelector(selector) : selector
+    // An invalid selector or non-DOM node has been provided.
+    if (!this.element) {
+      throw new Error('An invalid selector or non-DOM node has been provided.')
+    }
 
-    this.options = Object.assign({}, defaultOptions, options);
+    this.parent = this.element.parentElement
+    this.lang = typeof datepicker_langs[this.lang] !== 'undefined' ? this.lang : 'en'
 
-    this.hasTicket = 0;
-    this.ticketLouvre = null;
+    this.options = Object.assign({}, defaultOptions, options)
+
+    this.hasTicket = 0
+    this.ticketLouvre = null
 
     this.month = this.options.startDate.getMonth(),
       this.year = this.options.startDate.getFullYear(),
-      this.open = false;
+      this.open = false
 
-    this.build();
+    this.build()
   }
 
   build() {
-    var _this = this;
-    var container = document.getElementById('datepicker');
+    var _this = this
+    var container = document.getElementById('datepicker')
 
-    this.datePickerContainer = document.createElement('div');
-    this.datePickerContainer.id = 'datePicker' + ( new Date ).getTime();
-    this.datePickerContainer.classList.add('datepicker');
-    this.datePickerContainer.classList.add('is-active');
+    this.datePickerContainer = document.createElement('div')
+    this.datePickerContainer.id = 'datePicker' + ( new Date ).getTime()
+    this.datePickerContainer.classList.add('datepicker')
+    this.datePickerContainer.classList.add('is-active')
 
-    this.calendarContainer = document.createElement('div');
-    this.calendarContainer.id = 'datePicker' + ( new Date ).getTime();
-    this.calendarContainer.classList.add('calendar');
-    this.renderCalendar();
+    this.calendarContainer = document.createElement('div')
+    this.calendarContainer.id = 'datePicker' + ( new Date ).getTime()
+    this.calendarContainer.classList.add('calendar')
+    this.renderCalendar()
 
     if (this.options.overlay) {
-      var datePickerOverlay = document.createElement('div');
-      datePickerOverlay.classList.add('is-overlay');
-      this.datePickerContainer.appendChild(datePickerOverlay);
+      var datePickerOverlay = document.createElement('div')
+      datePickerOverlay.classList.add('is-overlay')
+      this.datePickerContainer.appendChild(datePickerOverlay)
     }
 
-    this.datePickerContainer.appendChild(this.calendarContainer);
-    container.appendChild(this.datePickerContainer);
+    this.datePickerContainer.appendChild(this.calendarContainer)
+    container.appendChild(this.datePickerContainer)
 
     this.element.addEventListener('click', function (e) {
-      e.preventDefault();
+      e.preventDefault()
       if (_this.open && _this.options.closeAfterClick === true ) {
-        _this.hide();
-        _this.open = false;
+        _this.hide()
+        _this.open = false
       } else {
-        _this.show();
-        _this.open = true;
+        _this.show()
+        _this.open = true
       }
-    });
+    })
   }
 
   /**
   * templating functions to abstract HTML rendering
   */
   renderDayName(day, abbr = false) {
-    day += datepicker_langs[this.options.lang].weekStart;
+    day += datepicker_langs[this.options.lang].weekStart
     while (day >= 7) {
-      day -= 7;
+      day -= 7
     }
 
-    return abbr ? datepicker_langs[this.options.lang].weekdaysShort[day] : datepicker_langs[this.options.lang].weekdays[day];
+    return abbr ? datepicker_langs[this.options.lang].weekdaysShort[day] : datepicker_langs[this.options.lang].weekdays[day]
   }
 
   renderDay(day, month, year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut,isRemaining) {
-    var _this = this;
-    var newDayContainer = document.createElement('div');
-    var newDay = document.createElement('div');
-    var newDayButton = document.createElement('button');
+    var _this = this
+    var newDayContainer = document.createElement('div')
+    var newDay = document.createElement('div')
+    var newDayButton = document.createElement('button')
 
-    newDayButton.classList.add('date-item');
-    newDayButton.innerHTML = day;
+    newDayButton.classList.add('date-item')
+    newDayButton.innerHTML = day
     newDayButton.addEventListener('click', function (e) {
       if (typeof _this.options.onSelect != 'undefined' &&
         _this.options.onSelect != null &&
         _this.options.onSelect) {
-        _this.options.onSelect(new Date(year, month, day));
+        _this.options.onSelect(new Date(year, month, day))
       }
-      _this.element.value = _this.getFormatedDate(( new Date(year, month, day) ), _this.options.dataFormat);
+      _this.element.value = _this.getFormatedDate(( new Date(year, month, day) ), _this.options.dataFormat)
      
-      var allDayContainer = $(".calendar-date.is-active");
+      var allDayContainer = $(".calendar-date.is-active")
       
-      var ticketDateElement = $("#ticketDate");
-      var ticketDateFormElement = $("#booking_stepOne_date");
-      var ticketDateToElement = _this.getFormatedDate(( new Date(year, month, day) ), 'd M. yyyy');
-      var ticketDateToFormElement = _this.getFormatedDate(( new Date(year, month, day) ), 'dd/mm/yyyy');
+      var ticketDateElement = $("#ticketDate")
+      var ticketDateFormElement = $("#booking_stepOne_date")
+      var ticketDateToElement = _this.getFormatedDate(( new Date(year, month, day) ), 'd M. yyyy')
+      var ticketDateToFormElement = _this.getFormatedDate(( new Date(year, month, day) ), 'dd/mm/yyyy')
 
 
-      ticketDateElement.text(ticketDateToElement);
-      ticketDateFormElement.val(ticketDateToFormElement);
-      allDayContainer.removeClass('is-active');
-      newDayContainer.classList.add('is-active');
+      ticketDateElement.text(ticketDateToElement)
+      ticketDateFormElement.val(ticketDateToFormElement)
+      allDayContainer.removeClass('is-active')
+      newDayContainer.classList.add('is-active')
 
       if (!_this.ticketLouvre ) {
         
-        var ticketLouvre = Ticket.create();
-        _this.hasTicket = 1;
-        _this.ticketLouvre = ticketLouvre;
+        var ticketLouvre = Ticket.create()
+        _this.hasTicket = 1
+        _this.ticketLouvre = ticketLouvre
       }
       _this.ticketLouvre.remainingToDate(ticketDateToFormElement)
      
       if (_this.options.closeOnSelect) {
-        _this.hide();
+        _this.hide()
       }
 
-    });
+    })
 
-    newDay.appendChild(newDayButton);
+    newDay.appendChild(newDayButton)
 
-    newDayContainer.dataset.fulldate = day + '/' + (month+1) + '/' + year;
-    newDayContainer.classList.add('calendar-date');
-    newDayContainer.appendChild(newDay);
+    newDayContainer.dataset.fulldate = day + '/' + (month+1) + '/' + year
+    newDayContainer.classList.add('calendar-date')
+    newDayContainer.appendChild(newDay)
 
 
-    newDay.classList.add('calendar-date');
+    newDay.classList.add('calendar-date')
     if (isRemaining) {
-      newDayContainer.dataset.remaining ='';
+      newDayContainer.dataset.remaining =''
     }
     if (isDisabled) {
-      newDayContainer.dataset.disabled = "";
-      newDayContainer.setAttribute('disabled', 'disabled');
+      newDayContainer.dataset.disabled = ""
+      newDayContainer.setAttribute('disabled', 'disabled')
     }
     if (isToday) {
-      newDayContainer.classList.add('is-today');
+      newDayContainer.classList.add('is-today')
     }
     if (isSelected) {
-      newDayContainer.classList.add('is-active');
+      newDayContainer.classList.add('is-active')
     }
     if (isBetween) {
-      newDayContainer.classList.add('calendar-range');
+      newDayContainer.classList.add('calendar-range')
     }
     if (isSelectedIn) {
-      newDayContainer.classList.add('range-start');
+      newDayContainer.classList.add('range-start')
     }
     if (isSelectedOut) {
-      newDayContainer.classList.add('range-end');
+      newDayContainer.classList.add('range-end')
     }
 
-    return newDayContainer;
+    return newDayContainer
   }
 
   renderNav(year, month) {
-    var _this = this;
-    var calendarNav = document.createElement('div');
-    calendarNav.classList.add('calendar-nav');
+    var _this = this
+    var calendarNav = document.createElement('div')
+    calendarNav.classList.add('calendar-nav')
 
-    var previousButtonContainer = document.createElement('div');
-    previousButtonContainer.classList.add('calendar-nav-left');
-    previousButtonContainer.dataset.navcalendar = '';
-    this.previousYearButton = document.createElement('div');
-    this.previousYearButton.classList.add('button');
-    this.previousYearButton.classList.add('is-text');
-    var previousButtonIcon = document.createElement('i');
-    previousButtonIcon.classList.add('fa');
-    previousButtonIcon.classList.add('fa-backward');
-    this.previousYearButton.appendChild(previousButtonIcon);
+    var previousButtonContainer = document.createElement('div')
+    previousButtonContainer.classList.add('calendar-nav-left')
+    previousButtonContainer.dataset.navcalendar = ''
+    this.previousYearButton = document.createElement('div')
+    this.previousYearButton.classList.add('button')
+    this.previousYearButton.classList.add('is-text')
+    var previousButtonIcon = document.createElement('i')
+    previousButtonIcon.classList.add('fa')
+    previousButtonIcon.classList.add('fa-backward')
+    this.previousYearButton.appendChild(previousButtonIcon)
     this.previousYearButton.addEventListener('click', function (e) {
-      e.preventDefault();
+      e.preventDefault()
 
-      _this.prevYear();
-    });
+      _this.prevYear()
+    })
     if(year > now.getFullYear()) {
-      previousButtonContainer.appendChild(this.previousYearButton);
+      previousButtonContainer.appendChild(this.previousYearButton)
     }
 
-    this.previousMonthButton = document.createElement('div');
-    this.previousMonthButton.classList.add('button');
-    this.previousMonthButton.classList.add('is-text');
-    var previousMonthButtonIcon = document.createElement('i');
-    previousMonthButtonIcon.classList.add('fa');
-    previousMonthButtonIcon.classList.add('fa-chevron-left');
-    this.previousMonthButton.appendChild(previousMonthButtonIcon);
+    this.previousMonthButton = document.createElement('div')
+    this.previousMonthButton.classList.add('button')
+    this.previousMonthButton.classList.add('is-text')
+    var previousMonthButtonIcon = document.createElement('i')
+    previousMonthButtonIcon.classList.add('fa')
+    previousMonthButtonIcon.classList.add('fa-chevron-left')
+    this.previousMonthButton.appendChild(previousMonthButtonIcon)
     this.previousMonthButton.addEventListener('click', function (e) {
-      e.preventDefault();
+      e.preventDefault()
       
-      _this.prevMonth();
-    });
+      _this.prevMonth()
+    })
     if(month > now.getMonth() || year > now.getFullYear()) {
-      previousButtonContainer.appendChild(this.previousMonthButton);
+      previousButtonContainer.appendChild(this.previousMonthButton)
     }
 
 
-    var calendarTitle = document.createElement('div');
-    calendarTitle.innerHTML = datepicker_langs[this.options.lang].months[month] + ' ' + year;
+    var calendarTitle = document.createElement('div')
+    calendarTitle.innerHTML = datepicker_langs[this.options.lang].months[month] + ' ' + year
 
-    var nextButtonContainer = document.createElement('div');
-    nextButtonContainer.classList.add('calendar-nav-right');
-    nextButtonContainer.dataset.navcalendar = '';    
-    this.nextMonthButton = document.createElement('div');
-    this.nextMonthButton.classList.add('button');
-    this.nextMonthButton.classList.add('is-text');
-    var nextMonthButtonIcon = document.createElement('i');
-    nextMonthButtonIcon.classList.add('fa');
-    nextMonthButtonIcon.classList.add('fa-chevron-right');
-    this.nextMonthButton.appendChild(nextMonthButtonIcon);
+    var nextButtonContainer = document.createElement('div')
+    nextButtonContainer.classList.add('calendar-nav-right')
+    nextButtonContainer.dataset.navcalendar = ''    
+    this.nextMonthButton = document.createElement('div')
+    this.nextMonthButton.classList.add('button')
+    this.nextMonthButton.classList.add('is-text')
+    var nextMonthButtonIcon = document.createElement('i')
+    nextMonthButtonIcon.classList.add('fa')
+    nextMonthButtonIcon.classList.add('fa-chevron-right')
+    this.nextMonthButton.appendChild(nextMonthButtonIcon)
     this.nextMonthButton.addEventListener('click', function (e) {
-      e.preventDefault();
+      e.preventDefault()
 
-      _this.nextMonth();
-    });
-    nextButtonContainer.appendChild(this.nextMonthButton);
-    this.nextYearButton = document.createElement('div');
-    this.nextYearButton.classList.add('button');
-    this.nextYearButton.classList.add('is-text');
-    var nextYearButtonIcon = document.createElement('i');
-    nextYearButtonIcon.classList.add('fa');
-    nextYearButtonIcon.classList.add('fa-forward');
-    this.nextYearButton.appendChild(nextYearButtonIcon);
+      _this.nextMonth()
+    })
+    nextButtonContainer.appendChild(this.nextMonthButton)
+    this.nextYearButton = document.createElement('div')
+    this.nextYearButton.classList.add('button')
+    this.nextYearButton.classList.add('is-text')
+    var nextYearButtonIcon = document.createElement('i')
+    nextYearButtonIcon.classList.add('fa')
+    nextYearButtonIcon.classList.add('fa-forward')
+    this.nextYearButton.appendChild(nextYearButtonIcon)
     this.nextYearButton.addEventListener('click', function (e) {
-      e.preventDefault();
+      e.preventDefault()
 
-      _this.nextYear();
-    });
-    nextButtonContainer.appendChild(this.nextYearButton);
+      _this.nextYear()
+    })
+    nextButtonContainer.appendChild(this.nextYearButton)
 
-    calendarNav.appendChild(previousButtonContainer);
-    calendarNav.appendChild(calendarTitle);
-    calendarNav.appendChild(nextButtonContainer);
+    calendarNav.appendChild(previousButtonContainer)
+    calendarNav.appendChild(calendarTitle)
+    calendarNav.appendChild(nextButtonContainer)
 
-    return calendarNav;
+    return calendarNav
   }
 
   renderHeader() {
-    var calendarHeader = document.createElement('div');
-    calendarHeader.classList.add('calendar-header');
+    var calendarHeader = document.createElement('div')
+    calendarHeader.classList.add('calendar-header')
 
     for (var i = 0; i < 7; i++) {
-      var newDay = document.createElement('div');
-      newDay.classList.add('calendar-date');
-      newDay.innerHTML = this.renderDayName(i, true);
-      calendarHeader.appendChild(newDay);
+      var newDay = document.createElement('div')
+      newDay.classList.add('calendar-date')
+      newDay.innerHTML = this.renderDayName(i, true)
+      calendarHeader.appendChild(newDay)
     }
 
-    return calendarHeader;
+    return calendarHeader
   }
 
   renderBody() {
-    var calendarBody = document.createElement('div');
-    calendarBody.classList.add('calendar-body');
+    var calendarBody = document.createElement('div')
+    calendarBody.classList.add('calendar-body')
 
-    return calendarBody;
+    return calendarBody
   }
 
   renderCalendar() {
 
-    var d = new Date();
-    var curr_date = d.getDate();
-    var curr_month = d.getMonth(); //Months are zero based
-    var curr_year = d.getFullYear();
-    now = new Date(curr_year,curr_month,curr_date);
+    var d = new Date()
+    var curr_date = d.getDate()
+    var curr_month = d.getMonth() //Months are zero based
+    var curr_year = d.getFullYear()
+    now = new Date(curr_year,curr_month,curr_date)
 
 
-    var ticketDateElement = $("#ticketDate");
+    var ticketDateElement = $("#ticketDate")
     if (document.getElementById( 'booking_stepOne_date' )) {
-      var ticketDateFormElement = document.getElementById( 'booking_stepOne_date' ).value;
+      var ticketDateFormElement = document.getElementById( 'booking_stepOne_date' ).value
       if (ticketDateFormElement) {
-        this.hasTicket = 1;
-        var date = ticketDateFormElement.split('/');
-        var ticketDateToElement = this.getFormatedDate(( new Date(date[2],date[1]-1,date[0]) ), 'd M. yyyy');
-        ticketDateElement.text(ticketDateToElement);
+        this.hasTicket = 1
+        var date = ticketDateFormElement.split('/')
+        var ticketDateToElement = this.getFormatedDate(( new Date(date[2],date[1]-1,date[0]) ), 'd M. yyyy')
+        ticketDateElement.text(ticketDateToElement)
       }
     }
     
-    var ticketDateValue = new Date($("#ticketDate").text());
+    var ticketDateValue = new Date($("#ticketDate").text())
 
-    var calendarNav = this.renderNav(this.year, this.month);
-    var calendarHeader = this.renderHeader();
-    var calendarBody = this.renderBody();
+    var calendarNav = this.renderNav(this.year, this.month)
+    var calendarHeader = this.renderHeader()
+    var calendarBody = this.renderBody()
 
-    this.calendarContainer.appendChild(calendarNav);
-    this.calendarContainer.appendChild(calendarHeader);
-    this.calendarContainer.appendChild(calendarBody);
+    this.calendarContainer.appendChild(calendarNav)
+    this.calendarContainer.appendChild(calendarHeader)
+    this.calendarContainer.appendChild(calendarBody)
 
     var days = this.getDaysInMonth(this.year, this.month),
-      before = new Date(this.year, this.month, 1).getDay();
+      before = new Date(this.year, this.month, 1).getDay()
 
     if (typeof this.options.onRender != 'undefined' &&
       this.options.onRender != null &&
       this.options.onRender) {
-      this.options.onRender(this);
+      this.options.onRender(this)
     }
 
     if (datepicker_langs[this.options.lang].weekStart > 0) {
-      before -= datepicker_langs[this.options.lang].weekStart;
+      before -= datepicker_langs[this.options.lang].weekStart
       if (before < 0) {
-        before += 7;
+        before += 7
       }
     }
 
     var cells = days + before,
-      after = cells;
+      after = cells
     while (after > 7) {
-      after -= 7;
+      after -= 7
     }
-    cells += 7 - after;
+    cells += 7 - after
     for (var i = 0; i < cells; i++) {
       var day = new Date(this.year, this.month  , 1 + ( i - before )),
         isBetween = false,
@@ -441,14 +444,14 @@ class MyDatePicker {
         isToday = this.compareDates(day, now),
         isEmpty = i < before || i >= ( days + before ),
         isDisabled = false,
-        isRemaining = false;
+        isRemaining = false
 
       if (!isSelected) {
-        isSelectedIn = false;
-        isSelectedOut = false;
+        isSelectedIn = false
+        isSelectedOut = false
       }
 
-      var remaining = null;
+      var remaining = null
 
       if (day.getMonth() !== this.month 
         || day < now                                      // TOUS LES JOURS AVANT AUJOURD'HUI
@@ -457,72 +460,72 @@ class MyDatePicker {
         || (day.getDate() == 1 && day.getMonth() == 10)   // 1 NOVEMBRE
         || (day.getDate() == 25 && day.getMonth() == 11)  // 25 DECEMBRE
       ) {
-        isDisabled = true;
+        isDisabled = true
       } else {
-        isRemaining = true;
+        isRemaining = true
       }
-      calendarBody.append(this.renderDay(day.getDate(), this.month, this.year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut,isRemaining));
+      calendarBody.append(this.renderDay(day.getDate(), this.month, this.year, isSelected, isToday, isDisabled, isEmpty, isBetween, isSelectedIn, isSelectedOut,isRemaining))
     }
   }
 
   prevMonth() {
-    this.month -= 1;
-    this.adjustCalendar();
-    this.renderCalendar();
+    this.month -= 1
+    this.adjustCalendar()
+    this.renderCalendar()
   }
 
   nextMonth() {
-    this.month += 1;
-    this.adjustCalendar();
-    this.renderCalendar();
+    this.month += 1
+    this.adjustCalendar()
+    this.renderCalendar()
   }
 
   prevYear() {
-    this.year -= 1;
-    this.adjustCalendar();
-    this.renderCalendar();
+    this.year -= 1
+    this.adjustCalendar()
+    this.renderCalendar()
   }
 
   nextYear() {
-    this.year += 1;
-    this.adjustCalendar();
-    this.renderCalendar();
+    this.year += 1
+    this.adjustCalendar()
+    this.renderCalendar()
   }
 
   show() {
     if (typeof this.options.onOpen != 'undefined' &&
       this.options.onOpen != null &&
       this.options.onOpen) {
-      this.options.onOpen(this);
+      this.options.onOpen(this)
     }
-    this.datePickerContainer.classList.add('is-active');
+    this.datePickerContainer.classList.add('is-active')
     if(this.options.popUp == true) {
-      this.adjustPosition();
+      this.adjustPosition()
     }
-    this.open = true;
+    this.open = true
   }
 
   hide() {
-    this.open = false;
+    this.open = false
     if (typeof this.options.onClose != 'undefined' &&
       this.options.onClose != null &&
       this.options.onClose) {
-      this.options.onClose(this);
+      this.options.onClose(this)
     }
-    this.datePickerContainer.classList.remove('is-active');
+    this.datePickerContainer.classList.remove('is-active')
   }
 
   adjustCalendar() {
     if (this.month < 0) {
-      this.year -= Math.ceil(Math.abs(this.month) / 12);
-      this.month += 12;
+      this.year -= Math.ceil(Math.abs(this.month) / 12)
+      this.month += 12
     }
     if (this.month > 11) {
-      this.year += Math.floor(Math.abs(this.month) / 12);
-      this.month -= 12;
+      this.year += Math.floor(Math.abs(this.month) / 12)
+      this.month -= 12
     }
-    this.calendarContainer.innerHTML = '';
-    return this;
+    this.calendarContainer.innerHTML = ''
+    return this
   }
 
   adjustPosition() {
@@ -531,30 +534,30 @@ class MyDatePicker {
       viewportWidth = window.innerWidth || document.documentElement.clientWidth,
       viewportHeight = window.innerHeight || document.documentElement.clientHeight,
       scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop,
-      left, top, clientRect;
+      left, top, clientRect
 
     if (typeof this.element.getBoundingClientRect === 'function') {
-      clientRect = this.element.getBoundingClientRect();
-      left = clientRect.left + window.pageXOffset;
-      top = clientRect.bottom + window.pageYOffset;
+      clientRect = this.element.getBoundingClientRect()
+      left = clientRect.left + window.pageXOffset
+      top = clientRect.bottom + window.pageYOffset
     } else {
-      left = this.element.offsetLeft;
-      top = this.element.offsetTop + this.element.offsetHeight;
+      left = this.element.offsetLeft
+      top = this.element.offsetTop + this.element.offsetHeight
       while (( this.element = this.element.offsetParent )) {
-        left += this.element.offsetLeft;
-        top += this.element.offsetTop;
+        left += this.element.offsetLeft
+        top += this.element.offsetTop
       }
     }
 
-    this.calendarContainer.style.position = 'absolute';
-    this.calendarContainer.style.left = left + 'px';
-    this.calendarContainer.style.top = top + 'px';
+    this.calendarContainer.style.position = 'absolute'
+    this.calendarContainer.style.left = left + 'px'
+    this.calendarContainer.style.top = top + 'px'
     
-    this.calendarContainer.style.top = top + 'px';
+    this.calendarContainer.style.top = top + 'px'
   }
 
   destroy() {
-    this.calendarContainer.remove();
+    this.calendarContainer.remove()
   }
 
   /**
@@ -583,17 +586,17 @@ class MyDatePicker {
       MM: dt.getMonth(),
       yy: dt.getFullYear().toString().substr(-2),
       yyyy: dt.getFullYear()
-    };
+    }
 
-    items.dd < 10 && ( items.dd = '0' + items.dd );
-    items.mm < 10 && ( items.mm = '0' + items.mm );
-    items.D = datepicker_langs[this.options.lang].weekdays[items.D ? items.D - 1 : 6];
-    items.M = datepicker_langs[this.options.lang].monthsShort[items.M];
-    items.MM = datepicker_langs[this.options.lang].months[items.MM];
+    items.dd < 10 && ( items.dd = '0' + items.dd )
+    items.mm < 10 && ( items.mm = '0' + items.mm )
+    items.D = datepicker_langs[this.options.lang].weekdays[items.D ? items.D - 1 : 6]
+    items.M = datepicker_langs[this.options.lang].monthsShort[items.M]
+    items.MM = datepicker_langs[this.options.lang].months[items.MM]
 
     return format.replace(/(?:[dmM]{1,2}|D|yyyy|yy)/g, function (m) {
-      return typeof items[m] !== 'undefined' ? items[m] : m;
-    });
+      return typeof items[m] !== 'undefined' ? items[m] : m
+    })
   }
 
   /**
@@ -604,23 +607,24 @@ class MyDatePicker {
 
 
   isDate(obj) {
-    return ( /Date/ ).test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());
+    return ( /Date/ ).test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime())
   }
 
   isLeapYear(year) {
     // solution by Matti Virkkunen: http://stackoverflow.com/a/4881951
-    return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;
+    return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0
   }
 
   getDaysInMonth(year, month) {
-    return [31, this.isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+    return [31, this.isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
   }
 
   compareDates(a, b) {
     // weak date comparison (use setToStartOfDay(date) to ensure correct result)
-    return a.getTime() === b.getTime();
+    return a.getTime() === b.getTime()
   }
 }
+
 (function($) {
   $(window).load(function(){
     /*Variables*/
@@ -668,7 +672,7 @@ class MyDatePicker {
         element.addClass('booking-static')
 
       }
-    });
+    })
     /*Fonctions rezise*/
     $(window).resize(function(e){
       element.removeClass('booking-fixed')
@@ -683,6 +687,7 @@ class MyDatePicker {
   })
 
 })(jQuery)
+
 var datepicker_langs = {
   en: {
     weekStart: 1,
@@ -1170,180 +1175,180 @@ class Ticket {
 
   constructor(selector, options) {
 
-    if (!options) options = {};
+    if (!options) options = {}
     var defaultOptions = {
       nbMax: 9,
       moment: 'Journée',
       fields: [],
-    };
+    }
 
-    this.element = typeof selector === 'string' ? document.querySelector(selector) : selector;
+    this.element = typeof selector === 'string' ? document.querySelector(selector) : selector
     // An invalid selector or non-DOM node has been provided.
     if (!this.element) {
-      throw new Error('An invalid selector or non-DOM node has been provided.');
+      throw new Error('An invalid selector or non-DOM node has been provided.')
     }
     this.id = this.element.attr('id')
-    this.eltNbTicket = this.element.find('#number-ticket');
-    this.parentNbTicket = this.eltNbTicket.parent();
-    this.eltTypeOfTicket = this.element.find('#typeOfTicket');
-    this.eltPrice = this.element.find('#price');
-    this.btnMore = this.element.find('.more');
-    this.btnLess = this.element.find('.less');
+    this.eltNbTicket = this.element.find('#number-ticket')
+    this.parentNbTicket = this.eltNbTicket.parent()
+    this.eltTypeOfTicket = this.element.find('#typeOfTicket')
+    this.eltPrice = this.element.find('#price')
+    this.btnMore = this.element.find('.more')
+    this.btnLess = this.element.find('.less')
     this.remainingTicket = 0
     this.nbTicket = 0
 
-    this.options = Object.assign({}, defaultOptions, options);
+    this.options = Object.assign({}, defaultOptions, options)
   
-    this.build();
+    this.build()
   }
 
   build() {
-    var _this = this;
-    var $elementFormspaces = $('#booking_stepOne_spaces');
-    var inputValue = document.getElementById('booking_stepOne_spaces').value;
+    var _this = this
+    var $elementFormspaces = $('#booking_stepOne_spaces')
+    var inputValue = document.getElementById('booking_stepOne_spaces').value
 
     if(inputValue) {
 
-      var childTicket = $('#ticket-enfant');
-      childTicket.removeClass('is-disabled');
-      childTicket.find('.more').addClass('is-active');
-      childTicket.find('#number-ticket').removeClass('has-text-white');
+      var childTicket = $('#ticket-enfant')
+      childTicket.removeClass('is-disabled')
+      childTicket.find('.more').addClass('is-active')
+      childTicket.find('#number-ticket').removeClass('has-text-white')
 
       if (_this.nbTicket > 0 ) {
-        _this.btnLess.removeClass('is-disabled');
-        _this.btnLess.addClass('is-active');
-        _this.eltNbTicket.parent().addClass('is-link-background');
-        _this.eltNbTicket.addClass('has-text-white');
+        _this.btnLess.removeClass('is-disabled')
+        _this.btnLess.addClass('is-active')
+        _this.eltNbTicket.parent().addClass('is-link-background')
+        _this.eltNbTicket.addClass('has-text-white')
       }
 
       if (_this.nbTicket > 5 ) {
-        _this.btnMore.removeClass('is-active');
-        _this.btnMore.addClass('is-disabled');
+        _this.btnMore.removeClass('is-active')
+        _this.btnMore.addClass('is-disabled')
       }
 
       for (var i = 0; i < _this.nbTicket; i++) {
-        updateCard(_this.id, _this.nbTicket);
+        updateCard(_this.id, _this.nbTicket)
       }
 
-      _this.eltNbTicket.text(_this.nbTicket);
+      _this.eltNbTicket.text(_this.nbTicket)
 
     }
       
     this.btnMore.click(function (e) {
 
-      e.preventDefault();
+      e.preventDefault()
 
       if (_this.nbTicket < _this.remainingTicket 
          && _this.nbTicket < _this.options.nbMax 
       ) {
 
-        _this.nbTicket ++;
-        $elementFormspaces.val(_this.nbTicket); 
+        _this.nbTicket ++
+        $elementFormspaces.val(_this.nbTicket) 
 
         if (_this.nbTicket > 0 ) {
-          _this.btnLess.removeClass('is-disabled');
-          _this.btnLess.addClass('is-active');
-          _this.eltNbTicket.parent().addClass('is-link-background');
-          _this.eltNbTicket.addClass('has-text-white');
+          _this.btnLess.removeClass('is-disabled')
+          _this.btnLess.addClass('is-active')
+          _this.eltNbTicket.parent().addClass('is-link-background')
+          _this.eltNbTicket.addClass('has-text-white')
         }
 
         if ( _this.nbTicket > _this.options.nbMax   - 1 
           || _this.nbTicket > _this.remainingTicket - 1 
         ) {
-          _this.btnMore.removeClass('is-active');
-          _this.btnMore.addClass('is-disabled');
+          _this.btnMore.removeClass('is-active')
+          _this.btnMore.addClass('is-disabled')
         }
 
-        _this.updateCalendar();
-        updateCard(_this.id, _this.nbTicket);
-        _this.eltNbTicket.text(_this.nbTicket);
+        _this.updateCalendar()
+        updateCard(_this.id, _this.nbTicket)
+        _this.eltNbTicket.text(_this.nbTicket)
         
       }
 
-    });
+    })
 
     this.btnLess.click(function (e) {
 
-      e.preventDefault();
+      e.preventDefault()
 
       if ( _this.nbTicket > 0 ) {
           
-        _this.nbTicket --;
-        $elementFormspaces.val(_this.nbTicket); 
+        _this.nbTicket --
+        $elementFormspaces.val(_this.nbTicket) 
 
         if (_this.nbTicket == 0 ) {
-          _this.btnLess.removeClass('is-active');
-          _this.btnLess.addClass('is-disabled');
-          _this.eltNbTicket.parent().removeClass('is-link-background');
-          _this.eltNbTicket.removeClass('has-text-white');
+          _this.btnLess.removeClass('is-active')
+          _this.btnLess.addClass('is-disabled')
+          _this.eltNbTicket.parent().removeClass('is-link-background')
+          _this.eltNbTicket.removeClass('has-text-white')
         }
         if ( _this.nbTicket <= _this.options.nbMax - 1 
            || _this.nbTicket <= _this.remainingTicket -1 
         ) {
-          _this.btnMore.addClass('is-active');
-          _this.btnMore.removeClass('is-disabled');
+          _this.btnMore.addClass('is-active')
+          _this.btnMore.removeClass('is-disabled')
         }
 
-        _this.updateCalendar();
-        _this.eltNbTicket.text(_this.nbTicket);
-        updateCard(_this.id, _this.nbTicket);
+        _this.updateCalendar()
+        _this.eltNbTicket.text(_this.nbTicket)
+        updateCard(_this.id, _this.nbTicket)
 
       }
 
-    });
+    })
 
     function updateCard(id, nbTicket) {
 
-      var $ticketResume = $('#ticket-resume');
-      var $elementCible = $('#'+id+'-resume');
-      var $elementFormCible = $('#booking_stepOne_'+id);
+      var $ticketResume = $('#ticket-resume')
+      var $elementCible = $('#'+id+'-resume')
+      var $elementFormCible = $('#booking_stepOne_'+id)
 
-      var content = nbTicket + 'x ' + _this.eltTypeOfTicket.text();
+      var content = nbTicket + 'x ' + _this.eltTypeOfTicket.text()
       if (nbTicket>1){
-        content += 's';
+        content += 's'
       }
-      var moment = _this.options.moment;
+      var moment = _this.options.moment
 
-      var summaryContainer = createElement('div','columns is-gapless is-marginless',null,id);
-      var summaryContent = createElement('div','column is-two-thirds is-size-7', content);
-      var summaryPrice = createElement('div','column is-size-7',moment,'isHalf');
+      var summaryContainer = createElement('div','columns is-gapless is-marginless',null,id)
+      var summaryContent = createElement('div','column is-two-thirds is-size-7', content)
+      var summaryPrice = createElement('div','column is-size-7',moment,'half')
 
-      summaryContainer.appendChild(summaryContent);
-      summaryContainer.appendChild(summaryPrice);
+      summaryContainer.appendChild(summaryContent)
+      summaryContainer.appendChild(summaryPrice)
 
-      $elementFormCible.val(nbTicket);       
+      $elementFormCible.val(nbTicket)       
 
-      updateTotal(nbTicket);
+      updateTotal(nbTicket)
 
       if(nbTicket > 0) {
         if($elementCible.length > 0) {
-          $elementCible.replaceWith(summaryContainer);
+          $elementCible.replaceWith(summaryContainer)
         } else {
-          $ticketResume.append(summaryContainer);
+          $ticketResume.append(summaryContainer)
         }    
         _this.updateHalfDay()
       } else {
-          $elementCible.remove();
+          $elementCible.remove()
       }
 
     }
 
     function updateTotal(nbTicket) {             
       constraintBottom()
-      var $eltTotalNumber = $('#number-total');     
-      $eltTotalNumber.text(nbTicket);
+      var $eltTotalNumber = $('#number-total')     
+      $eltTotalNumber.text(nbTicket)
     }
 
     function createElement(type, classes, text, id) {
-      var element = document.createElement(type);
-      element.setAttribute('class', classes);
+      var element = document.createElement(type)
+      element.setAttribute('class', classes)
       if(text){
-        element.textContent = text;
+        element.textContent = text
       }
       if(id){
-        element.setAttribute('id', id+'-resume');
+        element.setAttribute('id', id+'-resume')
       }
-      return element;
+      return element
     }
 
 
@@ -1351,20 +1356,20 @@ class Ticket {
 
   updateHalfDay(){
     var _this = this
-    var $ticketTarget = $('#isHalf')
-    var $cardTarget = $('#isHalf-resume');
-    var optionChecked = $('#booking_stepOne_isHalf option').filter(':selected').val()
+    var $ticketTarget = $('#half')
+    var $cardTarget = $('#half-resume')
+    var optionChecked = $('#booking_stepOne_half option').filter(':selected').val()
 
     updateMoment (optionChecked)
 
     $.each(this.options.fields, function(index, field){
-      if(field == 'isHalf') {
-        let selector = $('#booking_stepOne_isHalf')
+      if(field == 'half') {
+        let selector = $('#booking_stepOne_half')
         
         selector.on('change', function(e) {
           e.preventDefault()
     
-          optionChecked = $('#booking_stepOne_isHalf option').filter(':selected').val()
+          optionChecked = $('#booking_stepOne_half option').filter(':selected').val()
           updateMoment (optionChecked)
 
         })
@@ -1395,7 +1400,7 @@ class Ticket {
       } else if (remaining > 0 && !element.hasAttribute('data-disabled')) {
         element.removeAttribute('disabled')
       }
-    });
+    })
   }
 
   setRemaining(remaining) {
@@ -1414,7 +1419,7 @@ class Ticket {
       if (fulldate == date) {
         _this.setRemaining(remaining)
       }
-    });
+    })
   }
 
   static updateRemaining() {
@@ -1457,10 +1462,10 @@ class Ticket {
 
     
     var $tickets = $('[data-ticket]')
-    var fields = ['isHalf']
+    var fields = ['half']
     
     for (let ticket of $tickets) {
-      $(ticket).removeClass('is-hidden');
+      $(ticket).removeClass('is-hidden')
       if ($(ticket).data('name') != 'enfant') {
         $(ticket).removeClass('is-disabled')
       }
@@ -1468,11 +1473,11 @@ class Ticket {
         price: $(ticket).data('price'),
         fields: fields,
         parent: true
-      });
+      })
     }
     for (let field of fields) {
       var fieldElt = $( '#field-' + field )
-      fieldElt.removeClass('is-hidden'); 
+      fieldElt.removeClass('is-hidden') 
     }
     return ticketLouvre
   }
@@ -1499,21 +1504,22 @@ function constraintBottom() {
 
 function setOriginalSelect ($select) {
     if ($select.data("originalHTML") == undefined) {
-        $select.data("originalHTML", $select.html());
+        $select.data("originalHTML", $select.html())
     } // If it's already there, don't re-set it
 }
 
 function removeOptions ($select, $options) {
-    setOriginalSelect($select);
-    $options.remove();
+    setOriginalSelect($select)
+    $options.remove()
 }
 
 function restoreOptions ($select) {
-    var ogHTML = $select.data("originalHTML");
+    var ogHTML = $select.data("originalHTML")
     if (ogHTML != undefined) {
-        $select.html(ogHTML);
+        $select.html(ogHTML)
     }
 }
+
 class BookingTicket {
 
   constructor(element, options) {
@@ -1523,15 +1529,15 @@ class BookingTicket {
     var defaultOptions = {
       devise: '€',
       decimal: ',00',
-    };
+    }
 
-    this.isHalf = document.querySelector('[data-ishalf]') ? true : false;
+    this.isHalf = document.querySelector('[data-ishalf]') ? true : false
 
     this.element = element
-    this.ticketId = this.element.dataset.ticket;
-    this.ticketName = this.element.dataset.ticketname;
-    this.ticketNameOfImage = this.element.dataset.ticketimage;
-    this.ticketPrice = this.element.dataset.ticketprice;
+    this.ticketId = this.element.dataset.ticket
+    this.ticketName = this.element.dataset.ticketname
+    this.ticketNameOfImage = this.element.dataset.ticketimage
+    this.ticketPrice = this.element.dataset.ticketprice
 
     this.birthday_Day = this.element.querySelector('#booking_stepTwo_tickets_'+this.ticketId+'_birthday_day')
     this.birthday_Month = this.element.querySelector('#booking_stepTwo_tickets_'+this.ticketId+'_birthday_month')
@@ -1539,11 +1545,11 @@ class BookingTicket {
 
     this.imageElt = this.element.querySelector('#ticket-image')
     this.nameElt = this.element.querySelector('#ticket-name')
-    this.priceReduce = 10;
+    this.priceReduce = 10
     this.reduceElt = this.element.querySelector('#ticket-isReduce')
-    this.isReduce = this.reduceElt.querySelector('input[type=checkbox]').checked;
+    this.isReduce = this.reduceElt.querySelector('input[type=checkbox]').checked
 
-    this.options = Object.assign({}, defaultOptions, options);
+    this.options = Object.assign({}, defaultOptions, options)
 
     this.build()
   }
@@ -1554,24 +1560,24 @@ class BookingTicket {
     var _selectorChekbox = this.reduceElt.querySelector('input[type=checkbox]')
 
     this.birthday_Day.addEventListener('change', function (e) {
-      e.preventDefault();
+      e.preventDefault()
       _this.updateTicket()
     }) 
     this.birthday_Month.addEventListener('change', function (e) {
-      e.preventDefault();
+      e.preventDefault()
       _this.updateTicket()
     }) 
     this.birthday_Year.addEventListener('change', function (e) {
-      e.preventDefault();
+      e.preventDefault()
       _this.updateTicket()
     }) 
     _selectorChekbox.addEventListener('change', function (e) {
-      e.preventDefault();
+      e.preventDefault()
        if (_selectorChekbox.checked) {
-            _this.isReduce = true;
+            _this.isReduce = true
             _this.updateTicket('nocheck')
         } else {
-            _this.isReduce = false;
+            _this.isReduce = false
             _this.updateTicket('check')
             // do something else otherwise
         }
@@ -1583,8 +1589,8 @@ class BookingTicket {
 
   updateTicket(checkboxChange = false) {
     // Variables de date
-    var now = new Date();
-    var birthday = new Date(this.birthday_Year.value,this.birthday_Month.value-1,this.birthday_Day.value); 
+    var now = new Date()
+    var birthday = new Date(this.birthday_Year.value,this.birthday_Month.value-1,this.birthday_Day.value) 
     var age = this.calculateAge(birthday)
 
     if (!this.birthday_Year.value) {
@@ -1594,19 +1600,19 @@ class BookingTicket {
     // Variables d'image
     var path = this.imageElt.src
 
-    var ticketResume = document.getElementById('ticket-resume');
+    var ticketResume = document.getElementById('ticket-resume')
 
     if (age < 12){    
 
         if (checkboxChange == 'check') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce'
         } else if(checkboxChange == 'nocheck') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume';
+          var oldElement = '#ticket-' + this.ticketName + '-resume'
         } else {
           if (this.isReduce) {
-            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce'
           } else {
-            var oldElement = '#ticket-' + this.ticketName + '-resume';
+            var oldElement = '#ticket-' + this.ticketName + '-resume'
           }
         }
 
@@ -1633,14 +1639,14 @@ class BookingTicket {
     } else if(age >= 12 && age < 60){
 
         if (checkboxChange == 'check') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce'
         } else if(checkboxChange == 'nocheck') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume';
+          var oldElement = '#ticket-' + this.ticketName + '-resume'
         } else {
           if (this.isReduce) {
-            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce'
           } else {
-            var oldElement = '#ticket-' + this.ticketName + '-resume';
+            var oldElement = '#ticket-' + this.ticketName + '-resume'
           }
         }
 
@@ -1669,14 +1675,14 @@ class BookingTicket {
     } else if(age >= 60){
 
         if (checkboxChange == 'check') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+          var oldElement = '#ticket-' + this.ticketName + '-resume-reduce'
         } else if(checkboxChange == 'nocheck') {
-          var oldElement = '#ticket-' + this.ticketName + '-resume';
+          var oldElement = '#ticket-' + this.ticketName + '-resume'
         } else {
           if (this.isReduce) {
-            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce';
+            var oldElement = '#ticket-' + this.ticketName + '-resume-reduce'
           } else {
-            var oldElement = '#ticket-' + this.ticketName + '-resume';
+            var oldElement = '#ticket-' + this.ticketName + '-resume'
           }
         }
       
@@ -1706,15 +1712,15 @@ class BookingTicket {
   }
 
   calculateAge(birthday) { // birthday is a date
-    var ageDifMs = Date.now() - birthday.getTime();
-    var ageDate = new Date(ageDifMs); // miliseconds from epoch
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
+    var ageDifMs = Date.now() - birthday.getTime()
+    var ageDate = new Date(ageDifMs) // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970)
   }
 
   updateTicketSumary(valueCibleName,valueCiblePrice,oldElement,checkboxChange) {
 
-    var ticketResume = document.getElementById('ticket-resume');
-    var elementSource = ticketResume.querySelector(oldElement);
+    var ticketResume = document.getElementById('ticket-resume')
+    var elementSource = ticketResume.querySelector(oldElement)
     var eltSourceName = elementSource.querySelector('#resume-nbr')
     var eltSourcePrice = elementSource.querySelector('#price-subsubtotal')
 
@@ -1723,9 +1729,9 @@ class BookingTicket {
     var valueSourcePrice = elementSource.dataset.price
 
     if (this.isReduce) {
-      var elementCible = ticketResume.querySelectorAll('#ticket-'+ valueCibleName +'-resume-reduce');
+      var elementCible = ticketResume.querySelectorAll('#ticket-'+ valueCibleName +'-resume-reduce')
     } else {   
-      var elementCible = ticketResume.querySelectorAll('#ticket-'+ valueCibleName +'-resume');
+      var elementCible = ticketResume.querySelectorAll('#ticket-'+ valueCibleName +'-resume')
     }
 
 
@@ -1768,8 +1774,8 @@ class BookingTicket {
       
       } else {
 
-        var eltCiblePrice = this.options.devise + valueCiblePrice + this.options.decimal;
-        var eltCibleName = '1x ' + valueCibleName[0].toUpperCase() + valueCibleName.substring(1);
+        var eltCiblePrice = this.options.devise + valueCiblePrice + this.options.decimal
+        var eltCibleName = '1x ' + valueCibleName[0].toUpperCase() + valueCibleName.substring(1)
         var id = 'ticket-' + valueCibleName + '-resume'
 
         if(this.isReduce) {
@@ -1777,14 +1783,14 @@ class BookingTicket {
           id += '-reduce'
         } 
 
-        var summaryContainer = this.createElement('div','columns is-gapless is-marginless',null,id,valueCibleName,valueCiblePrice,1);
-        var summaryContent = this.createElement('div','column is-two-thirds is-size-7', eltCibleName, 'resume-nbr');
-        var summaryPrice = this.createElement('div','column is-size-7',eltCiblePrice,'price-subsubtotal');
+        var summaryContainer = this.createElement('div','columns is-gapless is-marginless',null,id,valueCibleName,valueCiblePrice,1)
+        var summaryContent = this.createElement('div','column is-two-thirds is-size-7', eltCibleName, 'resume-nbr')
+        var summaryPrice = this.createElement('div','column is-size-7',eltCiblePrice,'price-subsubtotal')
         
-        summaryContainer.appendChild(summaryContent);
-        summaryContainer.appendChild(summaryPrice);
+        summaryContainer.appendChild(summaryContent)
+        summaryContainer.appendChild(summaryPrice)
 
-        ticketResume.appendChild(summaryContainer);
+        ticketResume.appendChild(summaryContainer)
         
       }
 
@@ -1807,33 +1813,33 @@ class BookingTicket {
     
     // constraintBottom()
   
-    var eltSubTotalPrice = document.querySelector('#price-subtotal');
-    var eltTotalPrice = document.querySelector('#price-total');
-    var devise = this.options.devise; 
+    var eltSubTotalPrice = document.querySelector('#price-subtotal')
+    var eltTotalPrice = document.querySelector('#price-total')
+    var devise = this.options.devise 
     
     eltSubTotalPrice.textContent = devise + total + this.options.decimal
     eltTotalPrice.textContent    = devise + total + this.options.decimal
   }
 
   createElement(type, classes, text, id, name, price, number) {
-    var element = document.createElement(type);
-    element.setAttribute('class', classes);
+    var element = document.createElement(type)
+    element.setAttribute('class', classes)
     if(text){
-      element.textContent = text;
+      element.textContent = text
     }
     if(id){
-      element.setAttribute('id', id);
+      element.setAttribute('id', id)
     }
     if(name){
-      element.setAttribute('data-name', name);
+      element.setAttribute('data-name', name)
     }
     if (price) {
-      element.setAttribute('data-price', price);
+      element.setAttribute('data-price', price)
     } 
     if (number) {
-      element.setAttribute('data-nombre', number);
+      element.setAttribute('data-nombre', number)
     } 
-    return element;
+    return element
   }
 
 
@@ -1848,12 +1854,13 @@ class BookingTicket {
   }
 
 }
-var Stripe;
+
+var Stripe
 if (Stripe !== undefined) {
   // Create a Stripe client
-  var stripe = Stripe('pk_test_8fWi3COBUMFME9SSpFHSNBr7');
+  var stripe = Stripe('pk_test_8fWi3COBUMFME9SSpFHSNBr7')
   // Create an instance of Elements
-  var elements = stripe.elements();
+  var elements = stripe.elements()
 
   // Custom styling can be passed to options when creating an Element.
   // (Note that this demo uses a wider set of styles than the guide below.)
@@ -1871,61 +1878,62 @@ if (Stripe !== undefined) {
       color: '#fa755a',
       iconColor: '#fa755a'
     }
-  };
+  }
 
   // Create an instance of the card Element
-  var card = elements.create('card', {style: style});
+  var card = elements.create('card', {style: style})
 
   // Add an instance of the card Element into the `card-element` <div>
-  card.mount('#card-element');
+  card.mount('#card-element')
 
   // Handle real-time validation errors from the card Element.
   card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
+    var displayError = document.getElementById('card-errors')
     if (event.error) {
-      displayError.classList.add('is-danger');
-      displayError.textContent = event.error.message;
+      displayError.classList.add('is-danger')
+      displayError.textContent = event.error.message
     } else {
-      displayError.textContent = '';
+      displayError.textContent = ''
     }
-  });
+  })
 
   // Handle form submission
-  var form = document.getElementById('booking_stepThree');
+  var form = document.getElementById('booking_stepThree')
 
   form.addEventListener('submit', function(event) {
-    event.preventDefault();
+    event.preventDefault()
 
     stripe.createToken(card).then(function(result) {
       if (result.error) {
         // Inform the user if there was an error
-        var errorElement = document.getElementById('card-errors');
-        errorElement.textContent = result.error.message;
+        var errorElement = document.getElementById('card-errors')
+        errorElement.textContent = result.error.message
       } else {
         // Send the token to your server
-        console.log(result.token);
-        stripeTokenHandler(result.token);
+        console.log(result.token)
+        stripeTokenHandler(result.token)
       }
-    });
-  });
+    })
+  })
 
   function stripeTokenHandler(token) {
     // Insert the token ID into the form so it gets submitted to the server
-    var form = document.getElementById('booking_stepThree');
-    var hiddenInput = document.createElement('input');
-    hiddenInput.setAttribute('type', 'hidden');
-    hiddenInput.setAttribute('name', 'stripeToken');
-    hiddenInput.setAttribute('value', token.id);
-    form.appendChild(hiddenInput);
+    var form = document.getElementById('booking_stepThree')
+    var hiddenInput = document.createElement('input')
+    hiddenInput.setAttribute('type', 'hidden')
+    hiddenInput.setAttribute('name', 'stripeToken')
+    hiddenInput.setAttribute('value', token.id)
+    form.appendChild(hiddenInput)
 
     // Submit the form
-    form.submit();
+    form.submit()
   }
 }
+
 jQuery(function($){
 
   var createdAt = document.querySelector('[data-createdat]').dataset.createdat
-  var liveTime = 20;
+  var liveTime = 20
   var endTime = new Date(createdAt)
   endTime.setMinutes(endTime.getMinutes() + liveTime)
   var minutes = $('#timer_minutes')
@@ -1954,7 +1962,7 @@ jQuery(function($){
       $( "#booking_stepThree" ).submit()
     }
 
-    setTimeout(setDate,1000);
+    setTimeout(setDate,1000)
 
   }
 

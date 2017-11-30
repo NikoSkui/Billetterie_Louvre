@@ -21,54 +21,55 @@ document.addEventListener( 'DOMContentLoaded', function () {
         var now = new Date()
         var today = now.getFullYear()+ '/' + (now.getMonth()+1) + '/' + now.getDate() 
         var daySelect = e.getFullYear()+ '/' + (e.getMonth()+1) + '/' + e.getDate() 
-        var $selector = $('#booking_stepOne_isHalf')
+        var $selector = $('#booking_stepOne_half')
         var $spacesVal = $('#number-ticket').text()
         var $remainingElt = $("[data-fulldate='"+e.getDate()+ '/' + (e.getMonth()+1) + '/' + e.getFullYear() +"']")
         var $remainingVal = $remainingElt.attr('data-remaining')
         var btnMore = $('#ticket-billet .more')
 
         if ($remainingVal == $spacesVal ) {
-          btnMore.removeClass('is-active');
-          btnMore.addClass('is-disabled');
+          btnMore.removeClass('is-active')
+          btnMore.addClass('is-disabled')
         } else {
-          btnMore.addClass('is-active');
-          btnMore.removeClass('is-disabled');       
+          btnMore.addClass('is-active')
+          btnMore.removeClass('is-disabled')       
         }
         
+        console.log(now.getHours())
         if (now.getHours() >= 14
             && today == daySelect   
         ) {
-          var $optionsToRemove = $selector.find('option[value="0"]');
-          removeOptions($selector, $optionsToRemove);   
+          var $optionsToRemove = $selector.find('option[value="0"]')
+          removeOptions($selector, $optionsToRemove)   
         } else {
-          restoreOptions($selector);
+          restoreOptions($selector)
         }
       }
 
-    });
-    var $selectedDate = $('#ticketDate').text();
+    })
+    var $selectedDate = $('#ticketDate').text()
     var dateTicket = new Date($selectedDate)
 
     if (dateTicket != 'Invalid Date') {
-      addTicket();
+      addTicket()
     }
 
   }
 
   if ($('.checkout-steps__item--accessible')) {
     $('.checkout-steps__item--accessible').click(function(e){
-          e.preventDefault();
-          history.back();
-    });
+          e.preventDefault()
+          history.back()
+    })
   }
 
-});
-var Stripe;
+})
+var Stripe
 if (Stripe !== undefined) {
   // Create a Stripe client
-  var stripe = Stripe('pk_test_8fWi3COBUMFME9SSpFHSNBr7');
+  var stripe = Stripe('pk_test_8fWi3COBUMFME9SSpFHSNBr7')
   // Create an instance of Elements
-  var elements = stripe.elements();
+  var elements = stripe.elements()
 
   // Custom styling can be passed to options when creating an Element.
   // (Note that this demo uses a wider set of styles than the guide below.)
@@ -86,61 +87,62 @@ if (Stripe !== undefined) {
       color: '#fa755a',
       iconColor: '#fa755a'
     }
-  };
+  }
 
   // Create an instance of the card Element
-  var card = elements.create('card', {style: style});
+  var card = elements.create('card', {style: style})
 
   // Add an instance of the card Element into the `card-element` <div>
-  card.mount('#card-element');
+  card.mount('#card-element')
 
   // Handle real-time validation errors from the card Element.
   card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
+    var displayError = document.getElementById('card-errors')
     if (event.error) {
-      displayError.classList.add('is-danger');
-      displayError.textContent = event.error.message;
+      displayError.classList.add('is-danger')
+      displayError.textContent = event.error.message
     } else {
-      displayError.textContent = '';
+      displayError.textContent = ''
     }
-  });
+  })
 
   // Handle form submission
-  var form = document.getElementById('booking_stepThree');
+  var form = document.getElementById('booking_stepThree')
 
   form.addEventListener('submit', function(event) {
-    event.preventDefault();
+    event.preventDefault()
 
     stripe.createToken(card).then(function(result) {
       if (result.error) {
         // Inform the user if there was an error
-        var errorElement = document.getElementById('card-errors');
-        errorElement.textContent = result.error.message;
+        var errorElement = document.getElementById('card-errors')
+        errorElement.textContent = result.error.message
       } else {
         // Send the token to your server
-        console.log(result.token);
-        stripeTokenHandler(result.token);
+        console.log(result.token)
+        stripeTokenHandler(result.token)
       }
-    });
-  });
+    })
+  })
 
   function stripeTokenHandler(token) {
     // Insert the token ID into the form so it gets submitted to the server
-    var form = document.getElementById('booking_stepThree');
-    var hiddenInput = document.createElement('input');
-    hiddenInput.setAttribute('type', 'hidden');
-    hiddenInput.setAttribute('name', 'stripeToken');
-    hiddenInput.setAttribute('value', token.id);
-    form.appendChild(hiddenInput);
+    var form = document.getElementById('booking_stepThree')
+    var hiddenInput = document.createElement('input')
+    hiddenInput.setAttribute('type', 'hidden')
+    hiddenInput.setAttribute('name', 'stripeToken')
+    hiddenInput.setAttribute('value', token.id)
+    form.appendChild(hiddenInput)
 
     // Submit the form
-    form.submit();
+    form.submit()
   }
 }
+
 jQuery(function($){
 
   var createdAt = document.querySelector('[data-createdat]').dataset.createdat
-  var liveTime = 20;
+  var liveTime = 20
   var endTime = new Date(createdAt)
   endTime.setMinutes(endTime.getMinutes() + liveTime)
   var minutes = $('#timer_minutes')
@@ -169,7 +171,7 @@ jQuery(function($){
       $( "#booking_stepThree" ).submit()
     }
 
-    setTimeout(setDate,1000);
+    setTimeout(setDate,1000)
 
   }
 

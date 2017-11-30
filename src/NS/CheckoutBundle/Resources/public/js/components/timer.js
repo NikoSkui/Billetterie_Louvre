@@ -1,7 +1,7 @@
 jQuery(function($){
 
   var createdAt = document.querySelector('[data-createdat]').dataset.createdat
-  var liveTime = 20;
+  var liveTime = 20
   var endTime = new Date(createdAt)
   endTime.setMinutes(endTime.getMinutes() + liveTime)
   var minutes = $('#timer_minutes')
@@ -30,7 +30,7 @@ jQuery(function($){
       $( "#booking_stepThree" ).submit()
     }
 
-    setTimeout(setDate,1000);
+    setTimeout(setDate,1000)
 
   }
 

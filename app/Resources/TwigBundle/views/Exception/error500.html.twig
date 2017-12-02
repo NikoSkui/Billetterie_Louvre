@@ -6,7 +6,34 @@
 {% block headerTitle %}Oops! Une erreur s'est produite{% endblock %}
 
 {% block body %}
-  Le serveur a renvoyé un "{{ status_code }} {{ status_text|trans }}".
+
+  {% include "NSTicketingBundle:Components:header.html.twig" %}
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          Oops....
+        </h1>
+        <div class="columns">
+          <div class="column is-two-thirds">
+            <h2 class="subtitle">
+              Nous ne sommes pas en mesure de traiter votre requête ! Réessayez ultérieurement ou assurez vous de l'exactitude des données transmises. Si le problème persiste, contactez le webmaster à l'adresse suivante : webmaster@louvre.fr
+            </h2>
+            <p class="has-mt-5">
+              <a href="{{ path('ns_ticketing_homepage') }}" 
+                  class="button is-link is-fullwidth is-medium"
+              >
+                <span>Retour à l'accueil</span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# Le serveur a renvoyé un "{{ status_code }} {{ status_text|trans }}".
   <hr>
-  {{- exception.message|nl2br|format_file_from_text -}}
+  {{- exception.message|nl2br|format_file_from_text -}} #}
 {% endblock %}

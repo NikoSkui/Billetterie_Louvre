@@ -76,3 +76,15 @@
 .select:not(.is-multiple) .birthday::before{
   left:52%;
 }
+
+@media screen and (max-width: 768px) {
+  
+  .card-to-ticket .image  {
+    overflow: hidden;
+    max-height: 150px
+  }
+  .card-to-ticket .image > img {
+    margin-top: -50%;
+  }
+
+}

@@ -32,13 +32,13 @@ class BookingTicket
      * @Assert\NotBlank(message="Vous devez saisir un nom et prénom")
      * @Assert\Type(
      *      type="string",
-     *      message="Vous devez saisir une chaine de charactère"
+     *      message="Vous devez saisir une chaine de caractère"
      * )
      * @Assert\Length(
      *      min = 5,
      *      max = 200,
-     *      minMessage ="Vous devez entrer au moins {{ limit }} charactères",
-     *      maxMessage ="Vous devez entrer moins de {{ limit }} charactères"
+     *      minMessage ="Vous devez entrer au moins {{ limit }} caractères",
+     *      maxMessage ="Vous devez entrer moins de {{ limit }} caractères"
      * )
      */
     private $userName;

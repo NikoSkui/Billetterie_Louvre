@@ -247,6 +247,8 @@ class Ticket {
     dateElts.forEach(function(element) {
       var fulldate  = element.dataset.fulldate
       var remaining = element.dataset.remaining
+      console.log(fulldate);
+      console.log(date);
       if (fulldate == date) {
         _this.setRemaining(remaining)
       }
@@ -262,6 +264,10 @@ class Ticket {
         var day = fulldate.split('/')
         param += '/'
         param += day[0]
+        if(dateElts.length == 1) {
+          param += '/'
+          param += day[0]
+        }
         if(k == (dateElts.length-1)){
           param += '/'
           param += day[1]   

@@ -25,7 +25,7 @@ class BookingTicketType extends AbstractType
                 'preferred_choices' => ['FR']
             ])
             ->add('birthday',BirthdayType::class,[
-                'years' => range(date('Y')-120, date('Y')-4),   
+                'years' => range(date('Y')-119, date('Y')-4),   
                 'placeholder' => [
                     'year'  => '--',
                     'month' => '--',

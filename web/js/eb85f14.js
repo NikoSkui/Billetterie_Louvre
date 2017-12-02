@@ -34,8 +34,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
           btnMore.addClass('is-active')
           btnMore.removeClass('is-disabled')       
         }
-        
-        console.log(now.getHours())
+      
         if (now.getHours() >= 14
             && today == daySelect   
         ) {
@@ -313,6 +312,8 @@ class Ticket {
     dateElts.forEach(function(element) {
       var fulldate  = element.dataset.fulldate
       var remaining = element.dataset.remaining
+      console.log(fulldate);
+      console.log(date);
       if (fulldate == date) {
         _this.setRemaining(remaining)
       }
@@ -328,6 +329,10 @@ class Ticket {
         var day = fulldate.split('/')
         param += '/'
         param += day[0]
+        if(dateElts.length == 1) {
+          param += '/'
+          param += day[0]
+        }
         if(k == (dateElts.length-1)){
           param += '/'
           param += day[1]   
@@ -584,6 +589,10 @@ class MyDatePicker {
     })
 
     newDay.appendChild(newDayButton)
+
+    if(day < 10 ) {
+      day = '0' + day
+    }
 
     newDayContainer.dataset.fulldate = day + '/' + (month+1) + '/' + year
     newDayContainer.classList.add('calendar-date')

@@ -28,6 +28,9 @@ class AjaxController extends Controller
     $nbDay = $dayend - $daystart;
     for ($i=0; $i < $nbDay+1 ; $i++) { 
       $day = $daystart + $i;
+      if($day < 10) {
+        $day = '0'.$day;
+      }
       $fullDate = $day.'/'.$month.'/'.$year;
       $date = new \DateTime();
       $date = $date->setDate($year, $month, $day);

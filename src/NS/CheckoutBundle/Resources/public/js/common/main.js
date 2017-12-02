@@ -34,8 +34,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
           btnMore.addClass('is-active')
           btnMore.removeClass('is-disabled')       
         }
-        
-        console.log(now.getHours())
+      
         if (now.getHours() >= 14
             && today == daySelect   
         ) {

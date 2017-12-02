@@ -33,3 +33,13 @@
 .card-content p { 
   font-size: 14px
 }
+
+.card-ticketing {
+  position:relative;
+  top:-78px;
+}
+@media screen and (max-width: 768px) {
+  .card-ticketing {
+    top:0;
+  }
+}

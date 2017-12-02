@@ -30,6 +30,7 @@ services:
         class: NS\CheckoutBundle\Services\ExitCheckoutService
         arguments:
             - "@session"
+            - "@doctrine.orm.entity_manager"
 
     # Services pour validation form
 

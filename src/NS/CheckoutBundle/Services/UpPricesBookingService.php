@@ -56,7 +56,7 @@ class UpPricesBookingService
         $bookingTicket->setReduce(false);
       }
 
-      // On vérifie si les tickets du booking sont réduit
+      // On vérifie si les tickets du booking sont réduits
       // --> Si Oui on SET le prix des tickets du booking  
       if ($bookingTicket->isReduce()) {
         $bookingTicket->setPrice($reduce->getPrice());

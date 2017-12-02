@@ -166,6 +166,10 @@ class MyDatePicker {
 
     newDay.appendChild(newDayButton)
 
+    if(day < 10 ) {
+      day = '0' + day
+    }
+
     newDayContainer.dataset.fulldate = day + '/' + (month+1) + '/' + year
     newDayContainer.classList.add('calendar-date')
     newDayContainer.appendChild(newDay)

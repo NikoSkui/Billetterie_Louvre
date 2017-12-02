@@ -63,3 +63,21 @@ div[id^=ticket-].is-disabled.ticket .cursor .more:hover.is-active {
   background-color: white;
   cursor: auto;
 }
+
+@media screen and (max-width: 768px) {
+  
+  .ticket .number-ticket {
+    display:flex;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 0px;
+    padding:2rem 2rem;
+  }
+  .ticket .content.column  {
+    width: 100%
+  }
+  .ticket .cursor .more {
+    border-top: 1px solid #babec5;
+  }
+
+}

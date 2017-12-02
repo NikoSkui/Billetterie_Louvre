@@ -24,6 +24,11 @@ class DefaultController extends Controller
 
     public function indexAction(Request $request)
     {
+        if($request->query->get('step')==1){
+            // On redirige vers l'étape 1
+            $request->getSession()->set('step','1');
+            return $this->redirectToRoute('ns_checkout_homepage'); 
+        }
         // On redirige vers l'étape  4
         if($request->getSession()->get('step') == 'completed'){
             return $this->forward('NSCheckoutBundle:Default:stepFor');    
@@ -173,13 +178,14 @@ class DefaultController extends Controller
             $booking = $form->getData();
 
             $liveTime = $this->container->get('ns_checkout.services.live_time')
-                                        ->validate($booking,20);
+                                        ->validate($booking,19);
             if($liveTime != "true") return  $liveTime;           
 
+            try {
             // On récupère le service stripe
             $stripe = $this->container->get('ns_checkout.services.stripe');
 
-            // On vérifie si l'email exist déjà
+            // On vérifie si l'email existe déjà
             $hasMail = $repBooking->findOneBy([
                 'userMail' => $booking->getUserMail(),
                 'status'    => 1,
@@ -198,12 +204,22 @@ class DefaultController extends Controller
                     "source"      => $request->get("stripeToken")
                 ]);
             }
-
-            $stripe->api('charges',[
-                "amount"   => $booking->getPrice() * 100,
-                "currency" => 'eur',
-                "customer" => $customer->id
-            ]);
+            
+                $charge = $stripe->api('charges',[
+                    "amount"   => $booking->getPrice() * 100,
+                    "currency" => 'eur',
+                    "customer" => $customer->id
+                ]);
+            } catch(\Exception $e) {
+                // On récupère le service translator
+                $translator = $this->get('translator');
+                $message = $translator->trans($e->getMessage());
+                $request->getSession()->getFlashBag()->add(
+                    'danger',
+                    $message
+                );
+                return $this->redirectToRoute('ns_checkout_homepage'); 
+            }
             
             // On modifie quelques valeurs du booking
             $booking->setStatus(1);
@@ -214,7 +230,7 @@ class DefaultController extends Controller
             $em->flush($booking);
 
             // On récupère le service bookingMailer
-            // Et on envoi un mail avec les coordonnées du booking
+            // Et on envoie un mail avec les coordonnées du booking
             $bookingMailer = $this->container->get('ns_checkout.services.booking_mailer');
             $bookingMailer->sendBookingSuccessMessage($booking);
 
@@ -257,4 +273,5 @@ class DefaultController extends Controller
             'booking'
         ));
     }
+
 }

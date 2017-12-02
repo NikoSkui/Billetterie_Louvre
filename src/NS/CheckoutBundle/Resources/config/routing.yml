@@ -3,11 +3,6 @@ ns_checkout_homepage:
     defaults: 
         _controller: NSCheckoutBundle:Default:index
 
-ns_checkout_exit:
-    path:     /exit
-    defaults: 
-        _controller: NSCheckoutBundle:Default:exit
-
 ns_checkout_ajax_remaining:
     path:     /remaining/{daystart}/{dayend}/{month}/{year}
     defaults: 

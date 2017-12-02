@@ -23,7 +23,7 @@ monolog:
 
 ns_checkout:
     booking:
-        max_tickets_by_day: 1000
+        max_tickets_by_day: 10
 
 swiftmailer:
     transport: gmail

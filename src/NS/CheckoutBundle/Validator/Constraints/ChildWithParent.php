@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Exception\MissingOptionsException;
 class ChildWithParent extends Constraint
 {
     
-    public $message = "Un enfant ne peux pas acheter de billet si il n'est pas accompagné d'un adulte.";
+    public $message = "Un enfant ne peut pas acheter de billet si il n'est pas accompagné d'un adulte.";
     public $max = 1;
 
     public function __construct($options = null)

@@ -43,7 +43,7 @@ class ChildWithParentValidator extends ConstraintValidator
     // On boucle sur les tickets
     foreach ($value as $bookingTicket) {
 
-      // On calcul l'age en fonction de la date d'anniversaire du ticket
+      // On calcule l'age en fonction de la date d'anniversaire du ticket
       $age = $today->diff($bookingTicket->getBirthday())->format('%y');
 
       if ($age >= $ageMaxChild) { $adult ++;}

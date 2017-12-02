@@ -18,6 +18,11 @@
   bottom:12px;
   background-color: #fff;
 }
+@media screen and (max-width: 768px) {
+  .booking-absolute, .booking-fixed {
+    position: relative!important;
+  }
+}
 #card-checkout .card-content .column{
   line-height: 1.7
 }

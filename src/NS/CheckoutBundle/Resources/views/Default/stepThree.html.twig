@@ -12,10 +12,10 @@
     </p>
   </div>
   <div class="tile is-child" style="flex-grow:0;">
-    <p class="subtitle is-5" data-createdat="{{ booking.createdAt|date('Y/m/j H:i:s') }}">Temps restant pour effectuer votre paiement : <span id="timer_minutes">20</span>m <span id="timer_seconds">0</span>s</p>  
+    <p class="subtitle is-5" data-createdat="{{ booking.createdAt|date('Y/m/d H:i:s') }}">Temps restant pour effectuer votre paiement : <span id="timer_minutes">20</span>m <span id="timer_seconds">0</span>s</p>  
   </div>
 
-
+  {% include "NSTicketingBundle:Components:flashes.html.twig" %}
 
   <div id="field-userMail" class="tile is-child" style="flex-grow:0;">
     <div class="field ">

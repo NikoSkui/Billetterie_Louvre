@@ -32,7 +32,7 @@
           {% include "NSTicketingBundle:Components:infos.html.twig" %}
 
         </div>
-        <div class="column" style="position:relative;top:-78px;">
+        <div class="column card-ticketing">
 
           {% include "NSTicketingBundle:Components:card.html.twig" %}
 
@@ -40,6 +40,21 @@
       </div>
     </div>
   </section>
+{% endblock %}
+
+{% block footer %}
+
+  <footer class="footer footer-homepage-ticketing is-medium">
+    <div class="container">
+      <div class="content has-text-centered">
+        <figure class="image is-96x96">
+          <img src="{{ asset('bundles/nsticketing/img/footer/logo.png') }}" alt="logo">
+        </figure>
+        <h2 class="title has-text-centered has-text-white">Musée du Louvre</h2>
+        <p>Musée du Louvre - © 2017 by 3desquisse.fr</p>
+      </div>
+    </div>
+  </footer>
 {% endblock %}
 
 

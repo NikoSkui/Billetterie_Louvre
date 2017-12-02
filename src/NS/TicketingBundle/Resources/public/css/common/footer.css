@@ -2,3 +2,18 @@
   background: white;
   padding: 1rem
 }
+.footer.footer-homepage-ticketing {
+  background-color: #02122d;
+  color:white;
+}
+
+.footer.footer-homepage-ticketing .content figure {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+.footer.footer-homepage-ticketing .title {
+  margin-top: 0;
+  margin-bottom: 5rem;
+}

@@ -128,7 +128,6 @@ class BookingTicket {
           }
         }
 
-
         var newName = 'normal'
         if (this.isReduce) {
           var newPrice = 10
@@ -225,7 +224,10 @@ class BookingTicket {
 
         elementSource.dataset.nombre = valueNewSourceNbTicket
         eltSourceName.textContent = valueNewSourceNbTicket + 'x ' + valueSourceName[0].toUpperCase() + valueSourceName.substring(1)
-        if (!this.isReduce) {
+        if ( !this.isReduce 
+           && oldElement !== '#ticket-enfant-resume' 
+           && oldElement !== '#ticket-billet-resume' 
+        ) {
           eltSourceName.textContent += ' (tarif réduit)'  
         }
         eltSourcePrice.textContent = this.options.devise + (valueNewSourceNbTicket * valueSourcePrice) + this.options.decimal

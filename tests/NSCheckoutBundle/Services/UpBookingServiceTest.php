@@ -84,16 +84,16 @@ class UpPricesBookingServiceTest extends WebTestCase
   /**
    * @dataProvider birthdayForBookingPrice
    */
-  public function testUpdatePriceWithGoodDate($type, $birthday, $isReduce, $isHalf, $price)
+  public function testUpdatePriceWithGoodDate($type, $birthday, $reduce, $half, $price)
   {
     $upPricesBooking = new UpPricesBookingService($this->em);
 
     $bookingTicket = new BookingTicket();
     $bookingTicket->setUserName($type)
                   ->setBirthday($birthday)
-                  ->setIsReduce($isReduce);
+                  ->setReduce($reduce);
     $booking = new Booking();
-    $booking->setIsHalf($isHalf)
+    $booking->setHalf($half)
             ->addTicket($bookingTicket);
 
     $result = $upPricesBooking->updatePrice($booking)->getPrice();
@@ -105,16 +105,16 @@ class UpPricesBookingServiceTest extends WebTestCase
   /**
    * @dataProvider exceptionBirthdayForBookingPrice
    */
-  public function testUpdatePriceWithBadDate($type, $birthday, $isReduce, $isHalf, $message)
+  public function testUpdatePriceWithBadDate($type, $birthday, $reduce, $half, $message)
   {
       $upPricesBooking = new UpPricesBookingService($this->em);
 
       $bookingTicket = new BookingTicket();
       $bookingTicket->setUserName($type)
                     ->setBirthday($birthday)
-                    ->setIsReduce($isReduce);
+                    ->setReduce($reduce);
       $booking = new Booking();
-      $booking->setIsHalf($isHalf)
+      $booking->setHalf($half)
               ->addTicket($bookingTicket);
 
       $this->expectExceptionMessage($message);

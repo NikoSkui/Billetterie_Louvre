@@ -75,35 +75,35 @@ class BookingTest extends WebTestCase
 
     $bookingTicket1 = new BookingTicket();
     $bookingTicket1->setTicket($repTicket->findOneByName('enfant'))
-                   ->setIsReduce(false)
+                   ->setReduce(false)
                    ->setPrice(8);
     $bookingTicket2 = new BookingTicket();
     $bookingTicket2->setTicket($repTicket->findOneByName('normal'))
-                   ->setIsReduce(false)
+                   ->setReduce(false)
                    ->setPrice(16);
     $bookingTicket3 = new BookingTicket();
     $bookingTicket3->setTicket($repTicket->findOneByName('senior'))
-                   ->setIsReduce(false)
+                   ->setReduce(false)
                    ->setPrice(12);
     $bookingTicket4 = new BookingTicket();
     $bookingTicket4->setTicket($repTicket->findOneByName('normal'))
-                   ->setIsReduce(true)
+                   ->setReduce(true)
                    ->setPrice(10);
     $bookingTicket5 = new BookingTicket();
     $bookingTicket5->setTicket($repTicket->findOneByName('senior'))
-                   ->setIsReduce(true)
+                   ->setReduce(true)
                    ->setPrice(10);
     $bookingTicket6 = new BookingTicket();
     $bookingTicket6->setTicket($repTicket->findOneByName('enfant'))
-                   ->setIsReduce(false)
+                   ->setReduce(false)
                    ->setPrice(8);
     $bookingTicket7 = new BookingTicket();
     $bookingTicket7->setTicket($repTicket->findOneByName('enfant'))
-                   ->setIsReduce(false)
+                   ->setReduce(false)
                    ->setPrice(8);
     $bookingTicket8 = new BookingTicket();
     $bookingTicket8->setTicket($repTicket->findOneByName('senior'))
-                   ->setIsReduce(true)
+                   ->setReduce(true)
                    ->setPrice(10);
 
     $this->booking = new Booking();

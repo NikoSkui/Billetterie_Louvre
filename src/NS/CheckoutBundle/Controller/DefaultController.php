@@ -66,7 +66,10 @@ class DefaultController extends Controller
         $form = $this
             ->createForm(BookingStepOneType::class, $booking)
             ->handleRequest($request);
-         
+
+        // Si le formulaire est soumis et valide
+        // --> On effectue un traitement
+        // Sinon on affiche les erreurs relevées
         if ($form->isSubmitted() && $form->isValid()) {
             
             // On récupère les données du formulaire
@@ -120,6 +123,9 @@ class DefaultController extends Controller
             ->createForm(BookingStepTwoType::class, $booking)      
             ->handleRequest($request);
 
+        // Si le formulaire est soumis et valide
+        // --> On effectue un traitement
+        // Sinon on affiche les erreurs relevées
         if ($form->isSubmitted() && $form->isValid()) {
             
             // On récupère le service
@@ -171,7 +177,9 @@ class DefaultController extends Controller
             ])     
             ->handleRequest($request);
 
-
+        // Si le formulaire est soumis et valide
+        // --> On effectue un traitement
+        // Sinon on affiche les erreurs relevées
         if ($form->isSubmitted() && $form->isValid()) {
 
             // On récupère les datas booking du formulaire
@@ -247,7 +255,7 @@ class DefaultController extends Controller
 
     public function stepForAction(Request $request)
     {
-        $step = 4;
+        $step = 4;       
         
          // On récupère l'entité manager et les repositories
         $em = $this->getDoctrine()->getManager();

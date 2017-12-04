@@ -120,7 +120,7 @@ class DefaultControllerTest extends WebTestCase
         $booking = new Booking();
         $booking->setDate('29/11/2017')
                 ->setSpaces(1)
-                ->setIsHalf(false);
+                ->setHalf(false);
         $bookingTicket = new BookingTicket();
         $bookingTicket->setTicket($this->ticket)
                       ->setBooking($booking);
@@ -158,7 +158,7 @@ class DefaultControllerTest extends WebTestCase
             'booking_stepTwo[tickets][0][birthday][day]'   => '1',
             'booking_stepTwo[tickets][0][birthday][month]' => '1',
             'booking_stepTwo[tickets][0][birthday][year]'  => '1985',
-            'booking_stepTwo[tickets][0][isReduce]'        => false,
+            'booking_stepTwo[tickets][0][reduce]'        => false,
         ]);
 
         $this->client->submit($form);
@@ -170,7 +170,7 @@ class DefaultControllerTest extends WebTestCase
             $bookingTicket->setUserName('Toto tata')
                           ->setCountry('FR')
                           ->setBirthday(new \DateTime('01/01/1985'))
-                          ->setIsReduce(false)
+                          ->setReduce(false)
                           ->setPrice(16)
                           ->setTicket($ticket);
         }
@@ -232,8 +232,7 @@ class DefaultControllerTest extends WebTestCase
         $response = $this->client->getResponse();
         $responseContent = $response->getContent();
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('step-4', $responseContent);
+        $this->assertEquals(302, $response->getStatusCode());
     }
 
     protected function tearDown()

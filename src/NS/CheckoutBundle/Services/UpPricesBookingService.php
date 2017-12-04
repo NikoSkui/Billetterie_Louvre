@@ -38,7 +38,7 @@ class UpPricesBookingService
       // On calcul l'age de la personne en fonction de la date d'anniversaire
       $age = $today->diff($bookingTicket->getBirthday())->format('%y');
 
-      // On boucle sur les types de tickets (enfant, normal, senior)
+      // On boucle sur les types de tickets (4=<enfant<12, 12=<normal<60, 60=<senior>120)
       foreach ($typeOfTickets as $type) {
 
         // On vérifie si l'age du billet du booking est compris entre ageMin/ageMax des types de tickets

@@ -190,29 +190,29 @@ class DefaultController extends Controller
             if($liveTime != "true") return  $liveTime;           
 
             try {
-            // On récupère le service stripe
-            $stripe = $this->container->get('ns_checkout.services.stripe');
+                // On récupère le service stripe
+                $stripe = $this->container->get('ns_checkout.services.stripe');
 
-            // On vérifie si l'email existe déjà
-            $hasMail = $repBooking->findOneBy([
-                'userMail' => $booking->getUserMail(),
-                'status'    => 1,
-            ]);
-
-            if (!$hasMail) {
-
-                $customer = $stripe->api("customers",[
-                    "source"      => $request->get("stripeToken"),
-                    "description" => $request->get("booking_stepThree")["userName"],
-                    "email"       => $booking->getUserMail()
+                // On vérifie si l'email existe déjà
+                $hasMail = $repBooking->findOneBy([
+                    'userMail' => $booking->getUserMail(),
+                    'status'    => 1,
                 ]);
+                // Si Oui on utilise le client stripe existant
+                if (!$hasMail) {
 
-            } else {
-                $customer = $stripe->api("customers/{$hasMail->getCustomerId()}",[
-                    "source"      => $request->get("stripeToken")
-                ]);
-            }
-            
+                    $customer = $stripe->api("customers",[
+                        "source"      => $request->get("stripeToken"),
+                        "description" => $request->get("booking_stepThree")["userName"],
+                        "email"       => $booking->getUserMail()
+                    ]);
+                // Si Non on créer un nouveau client stripe
+                } else {
+                    $customer = $stripe->api("customers/{$hasMail->getCustomerId()}",[
+                        "source"      => $request->get("stripeToken")
+                    ]);
+                }
+                // Ensuite on charge se client
                 $charge = $stripe->api('charges',[
                     "amount"   => $booking->getPrice() * 100,
                     "currency" => 'eur',

@@ -145,7 +145,7 @@ class UpPricesBookingServiceTest extends WebTestCase
   public function exceptionBirthdayForBookingPrice()
   {
     return[
-      ['senior',(new \DateTime())->sub(new \DateInterval('P121Y')),true,true,'Vous êtes vraiment très très agé... Appelez-nous, nous allons organisez votre visite ensemble'  ],
+      ['senior',(new \DateTime())->sub(new \DateInterval('P121Y')),true,true,'Vous êtes vraiment très très agé... Appelez-nous, nous allons organiser votre visite ensemble'  ],
       ['enfant',(new \DateTime())->sub(new \DateInterval('P03Y')), true,true,'Les enfants de moins de quatre ans ne payent pas l\'entrée'  ]
     ];
   }

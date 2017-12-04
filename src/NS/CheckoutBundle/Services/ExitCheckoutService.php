@@ -20,8 +20,10 @@ class ExitCheckoutService
 
   public function goAway()
   { 
-    if(  $this->session->get('booking') 
-      && $this->session->get('booking')->getId()
+    if(( $this->session->get('booking') 
+      && $this->session->get('booking')->getId())
+      && $this->session->get('step')
+      && $this->session->get('step') !== 'completed'
     ) {
       $repBooking = $this->em->getRepository('NSCheckoutBundle:Booking');
       $booking = $repBooking->findOneById($this->session->get('booking')->getId());
